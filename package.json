@@ -1,0 +1,19 @@
+{
+  "name": "axs-scorecalculator",
+  "version": "1.0.0",
+  "description": "A calculator to calculate the score with the AxS score format",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "",
+  "keywords": [],
+  "author": "Wesley",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "2.0.0"
+  },
+  "dependencies": {
+    "electron-store": "^2.0.0"
+  }
+}
