@@ -17,7 +17,7 @@ initialize = () => {
 // ==================
 // Initialize the app
 app.on('ready', () => {
-    mainWindow = new BrowserWindow({icon: __dirname + '/web/resources/favicon.png', backgroundColor: '#3C4452'}); 
+    mainWindow = new BrowserWindow({icon: __dirname + '/web/resources/images/axs.png', backgroundColor: '#3C4452'}); 
 
     mainWindow.on('close', () => {
         mainWindow = null;

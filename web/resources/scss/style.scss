@@ -195,14 +195,18 @@ body {
 
         .matchHeader {
             position: fixed;
-            width: 100%;
+            overflow: hidden;
+            
+            width: calc(100% - #{$sidebar-width});
             z-index: 50;
+
+            height: 120px;
 
             background-color: $background-color;
         }
 
         .allMaps {
-            padding-top: 103px;
+            padding-top: 120px;
         }
 
         .multiplayerLobbies {
