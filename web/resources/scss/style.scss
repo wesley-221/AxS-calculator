@@ -7,10 +7,11 @@ $primary:       #fb9678;
 // =================
 // Import frameworks
 // =================
-@import "bootstrap/bootstrap.scss";
+@import "./bootstrap/bootstrap.scss";
 @import "./fontawesome/fontawesome.scss";
 @import "./fontawesome/solid.scss";
 @import "./fontawesome/regular.scss";
+@import "./extends.scss";
 
 // =================
 // Various variables
@@ -209,33 +210,35 @@ body {
             padding-top: 120px;
         }
 
-        .multiplayerLobbies {
-            @include make-container();
-            @include make-row();
+        .multiplayerLobby {
+            // @include make-col-ready();
+            // @include make-col(3);
 
-            .multiplayerLobby {
-                @include make-col-ready();
-                @include make-col(3);
+            width: 100%;
 
-                .body {
-                    overflow: hidden;
-                    border: 1px solid darken($background-color, 15%);
-                    // padding: 5px;
-                    margin: 5px;
-                    
-                    text-align: center;
-    
-                    height: $grid-gutter-width * 4; 
-    
-                    &:hover {
-                        border: 1px solid white;
-                        cursor: pointer;
-                    }
+            .body {
+                overflow: hidden;
+                border: 1px solid darken($background-color, 15%);
+                // padding: 5px;
+                margin: 5px;
+                
+                text-align: center;
 
-                    &.disabled {
-                        border: 1px solid red;
-                        cursor: not-allowed;
-                    }
+                height: $grid-gutter-width * 4; 
+
+                &:hover {
+                    border: 1px solid white;
+                    cursor: pointer;
+                }
+
+                &.disabled {
+                    border: 1px solid red;
+                    cursor: not-allowed;
+                }
+
+                .multiplayerClose {
+                    float: right;
+                    padding: $grid-gutter-width / 4;
                 }
             }
         }
@@ -318,4 +321,8 @@ hr {
     &:hover {
         color: white;
     }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: $primary;
 }
