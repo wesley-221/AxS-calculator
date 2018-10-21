@@ -54,9 +54,41 @@
                     <input id=multiplayerLink type=text class=form-control placeholder="Multiplayer link" />
                 </div>
 
+                <div class=row>
+                    <div class=col-6>
+                        <div class=form-group>
+                            <label for=teamOneName>Team one name</label>
+                            <p>
+                                Enter the name of the first team. This will be team <span class=red-text>red</span> and has slot 1, 2 and 3.
+                            </p>
+                            <input id=teamOneName type=text class=form-control placeholder="Team one name" />
+                        </div>
+                    </div>
+
+                    <div class=col-6>
+                        <div class=form-group>
+                            <label for=teamTwoName>Team two name</label>
+                            <p>
+                                Enter the name of the second team. This will be team <span class=blue-text>red</span> and has slot 4, 5 and 6.
+                            </p>
+                            <input id=teamTwoName type=text class=form-control placeholder="Team two name" />
+                        </div>
+                    </div>
+                </div>
+                
                 <hr />
 
-                <input type=button class="btn btn-primary float-right" value="Save" />
+                <input type=button id=createLobby class="btn btn-primary float-right" value="Create" />
+
+                <div class=row>
+                    <div class=col>
+                        <div id=createLobbyAlert class="alert alert-success" style="display: none;">
+                            <h2><i class="fas fa-check"></i> Success!</h2>
+
+                            <p id=lobbyText></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
@@ -65,4 +97,26 @@
     <script src="./resources/js/jquery-3.3.1.min.js"></script>
     <script src="./resources/js/bootstrap.min.js"></script>
     <script>if (window.module) module = window.module;</script>
+
+    <script>
+        const {ipcRenderer, remote} = require('electron');
+
+        $(() => {
+            $('#createLobby').on('click', () => {
+                // Create a lobby with the filled in data
+                ipcRenderer.send('createLobby', {
+                    'match-description': $('#matchDescription').val(),
+                    'match-url': $('#multiplayerLink').val(),
+                    'team-one-name': $('#teamOneName').val(),
+                    'team-two-name': $('#teamTwoName').val()
+                });
+            });
+
+            // This will be called when the match has been created
+            ipcRenderer.on('matchHasBeenCreated', function(event, arg) {
+                $('#createLobbyAlert').css('display', 'block');
+                $('#lobbyText').html(`The match has been succesfully created. <a href="./lobbyview.html?lobby=${arg}">Click here to go to the lobby</a>.`);
+            });
+        });
+    </script>
 </html>

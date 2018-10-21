@@ -34,42 +34,56 @@
             </div>
 
             <div class=mainContent>
-                <div class=multiplayerLobbies>
-                    <div class=multiplayerLobby>
-                        <div class=body>
-                            <div class=multiplayerId>123456</div>
-                            <div class=multiplayerDesc>Team 1 vs Team 2</div>
-                        </div>
-                    </div>
+                <!-- <div class=multiplayerLobby>
+                    <div class=body>
+                        <div class=row>
+                            <div class=col-11>
+                                <span class=multiplayerId><h1>123456</h1></span>
+                                <span class=multiplayerDesc>Team 1 vs Team 2</span>
+                            </div>
 
-                    <div class=multiplayerLobby>
-                        <div class=body>
-                            <div class=multiplayerId>123456</div>
-                            <div class=multiplayerDesc>Team 1 vs Team 2</div>
-                        </div>
-                    </div>
-
-                    <div class=multiplayerLobby>
-                        <div class=body>
-                            <div class=multiplayerId>123456</div>
-                            <div class=multiplayerDesc>Team 1 vs Team 2</div>
-                        </div>
-                    </div>
-
-                    <div class=multiplayerLobby>
-                        <div class=body>
-                            <div class=multiplayerId>123456</div>
-                            <div class=multiplayerDesc>Team 1 vs Team 2</div>
-                        </div>
-                    </div>
-
-                    <div class=multiplayerLobby>
-                        <div class=body>
-                            <div class=multiplayerId>123456</div>
-                            <div class=multiplayerDesc>Team 1 vs Team 2</div>
+                            <div class=col-1>
+                                <div class=multiplayerClose>
+                                    <button type=button class="btn btn-danger">Delete</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <div class=multiplayerLobby>
+                    <div class=body>
+                        <div class=row>
+                            <div class=col-11>
+                                <span class=multiplayerId><h1>123456</h1></span>
+                                <span class=multiplayerDesc>Team 1 vs Team 2</span>
+                            </div>
+
+                            <div class=col-1>
+                                <div class=multiplayerClose>
+                                    <button type=button class="btn btn-danger">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class=multiplayerLobby>
+                    <div class=body>
+                        <div class=row>
+                            <div class=col-11>
+                                <span class=multiplayerId><h1>123456</h1></span>
+                                <span class=multiplayerDesc>Team 1 vs Team 2</span>
+                            </div>
+
+                            <div class=col-1>
+                                <div class=multiplayerClose>
+                                    <button type=button class="btn btn-danger">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
             </div>
         </div>
     </body>
@@ -80,9 +94,40 @@
     <script>if (window.module) module = window.module;</script>
 
     <script>
-        $(function() {
-            $('.multiplayerLobby').on('click', () => {
-                window.location.href = './lobbyview.html';
+        const {ipcRenderer, remote} = require('electron');
+
+        $(() => {
+            // Send a request to the server to retrieve all saved lobbies
+            ipcRenderer.send(`requestSavedLobbies`, true);
+            
+            // This will be called after the requestSavedLobbies call, it contains all the saved lobbies
+            ipcRenderer.on('requestedLobbies', (event, arg) => {
+                // Loop through the lobbies
+                for(const lobbyId in arg) {
+                    const currentLobby = arg[lobbyId].data;
+
+                    $('.mainContent').append(`<div class=multiplayerLobby data-href="${lobbyId}">
+                                                <div class=body>
+                                                    <div class=row>
+                                                        <div class=col-11>
+                                                            <span class=multiplayerId><h1>${currentLobby.description}</h1></span>
+                                                            <span class=multiplayerDesc>${currentLobby.teamOneName} vs ${currentLobby.teamTwoName}</span>
+                                                        </div>
+
+                                                        <div class=col-1>
+                                                            <div class=multiplayerClose>
+                                                                <button type=button class="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>`);
+                }
+            });
+
+            // When you click on a multiplayer lobby block
+            $('.mainContent').on('click', '.multiplayerLobby', function() {
+                window.location.href = `./lobbyview.html?id=${$(this).data('href')}`;
             });
         });
     </script>
