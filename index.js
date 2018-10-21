@@ -47,6 +47,24 @@ app.on('activate', () => {
     }
 });
 
+ipcMain.on('saveAPIKey', (event, apiKey) => {
+    store.set('api-key', apiKey);
+
+    // =======================================================
+    // Send a message to frontend that the data has been saved
+    mainWindow.webContents.send(`savedData`, true);
+});
+
+// ==============================================
+// This is called when you load the settings page
+ipcMain.on('requestAPIKey', (event, arg) => {
+    const apiKey = store.get('api-key');
+
+    if(apiKey !== undefined) {
+        // Send the api key back to the front end
+        mainWindow.webContents.send('requestedAPIKey', apiKey);
+    }
+});
 // ==================================================
 // Prevent the app from crashing when an error occurs
 process.on("uncaughtException", err => {

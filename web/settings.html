@@ -36,11 +36,11 @@
             <div class=mainContent>
                 <div class=form-group>
                     <label for=apiKey>API key</label>
-                    <p>Enter your osu!API key so I can grab all the relevant multiplayer data. The API key can be found <a href="https://osu.ppy.sh/p/api" target="_blank">here</a>.</p>
+                    <p>Enter your osu!API key so I can grab all the relevant multiplayer data. The API key can be found <a href="https://osu.ppy.sh/p/api">here</a>.</p>
                     <input id=apiKey type=password class=form-control placeholder="osu!API key" />
                 </div>
 
-                <input type="button" class="btn btn-primary float-right" value="Save" />
+                <input id=saveButton type="button" class="btn btn-primary float-right" value="Save" />
             </div>
         </div>
     </body>
@@ -49,4 +49,33 @@
     <script src="./resources/js/jquery-3.3.1.min.js"></script>
     <script src="./resources/js/bootstrap.min.js"></script>
     <script>if (window.module) module = window.module;</script>
+
+    <script>
+        const {ipcRenderer, remote} = require('electron');
+
+        $(() => {
+            $('#saveButton').on('click', function() {
+                ipcRenderer.send('saveAPIKey', $('#apiKey').val());    
+            });
+
+            // This is called when the data has been saved
+            ipcRenderer.on('savedData', (event, arg) => {
+                $('.mainContent').append(`<div class="alert alert-success col-7"><h2><i class="fas fa-check"></i> Success!</h2>Succesfully saved your API key.</div>`);
+            });
+
+            // Request the api key
+            ipcRenderer.send('requestAPIKey', true);
+
+            // The api key that you requested
+            ipcRenderer.on('requestedAPIKey', (event, apiKey) => {
+                $('#apiKey').val(apiKey);
+            });          
+        });
+
+        // Open urls in the actual browser and not within the application
+        $('body').on('click', '.mainContent a', (e) => {
+            e.preventDefault();
+            require("electron").shell.openExternal(e.target.href);
+        });
+    </script>
 </html>
