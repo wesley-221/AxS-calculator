@@ -59,6 +59,20 @@
             return vars;
         }
 
+        function addDot(nStr, splitter = ' ') {
+            nStr += '';
+            const x = nStr.split('.');
+            let x1 = x[0];
+            const x2 = x.length > 1 ? '.' + x[1] : '';
+            const rgx = /(\d+)(\d{3})/;
+
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + splitter + '$2');
+            }
+
+            return x1 + x2;
+        }
+
         $(() => {
             const allUrlParameters = getUrlParamters();
             const lobbyId = allUrlParameters['id'];
@@ -68,6 +82,7 @@
             // =================================================
             // This will be called after requestMultiplayerLobby
             ipcRenderer.on('requestedLobby', (event, arg) => {
+                console.log(arg);
                 // All arg's
                 // ---------
                 // arg.cache
@@ -84,6 +99,11 @@
                 for(let map in arg.maps) {
                     const currentMap = arg.maps[map];
 
+                    const teamOneColour = (currentMap.team_one_score > currentMap.team_two_score) ? 'teamWin' : 'teamLoss';
+                    const teamTwoColour = (currentMap.team_two_score > currentMap.team_one_score) ? 'teamWin' : 'teamLoss';
+
+                    const winMessage = (currentMap.team_one_score > currentMap.team_two_score) ? `<span class=red-text>Team Red</span> has won. <span class=red-text>Team red</span> score: ${addDot(currentMap.team_one_score)} | <span class=blue-text>Team blue</span> score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_one_score - currentMap.team_two_score)}` : `<span class=blue-text>Team blue</span> has won. <span class=red-text>Team red</span> score: ${addDot(currentMap.team_one_score)} | <span class=blue-text>Team blue</span> score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_two_score - currentMap.team_one_score)}`;
+
                     $('.allMaps').append(`<div class=multiMatch>
                                             <div class=mapPicture style='background-image: url("https://b.ppy.sh/thumb/${arg.cache.beatmaps[currentMap.beatmap_id].beatmapset_id}.jpg");'></div>
 
@@ -93,20 +113,59 @@
                                                 </div>
 
                                                 <div class=mapScore>
-                                                    <div class=teamLoss>Team red score: 1 607 285</div>
-                                                    <div class=teamWin>Team blue score: 2 126 303</div>
+                                                    <table>
+                                                        <tr>
+                                                            <td>${arg.cache.users[currentMap[0].user]}</td>
+                                                            <td>&emsp;</td>
+                                                            <td>${addDot(currentMap[0].score.toFixed())} (${currentMap[0].accuracy}%)</td>
+                                                        </tr>
 
-                                                    Team blue has won. Team red score: 1 607 285 | Team blue score: 2 126 303 | Score difference: 519 018.
+                                                        <tr>
+                                                            <td>${arg.cache.users[currentMap[1].user]}</td>
+                                                            <td>&emsp;</td>
+                                                            <td>${addDot(currentMap[1].score.toFixed())} (${currentMap[1].accuracy}%)</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>${arg.cache.users[currentMap[2].user]}</td>
+                                                            <td>&emsp;</td>
+                                                            <td>${addDot(currentMap[2].score.toFixed())} (${currentMap[2].accuracy}%)</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>${arg.cache.users[currentMap[3].user]}</td>
+                                                            <td>&emsp;</td>
+                                                            <td>${addDot(currentMap[3].score.toFixed())} (${currentMap[3].accuracy}%)</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>${arg.cache.users[currentMap[4].user]}</td>
+                                                            <td>&emsp;</td>
+                                                            <td>${addDot(currentMap[4].score.toFixed())} (${currentMap[4].accuracy}%)</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>${arg.cache.users[currentMap[5].user]}</td>
+                                                            <td>&emsp;</td>
+                                                            <td>${addDot(currentMap[5].score.toFixed())} (${currentMap[5].accuracy}%)</td>
+                                                        </tr>
+                                                    </table>
+
+                                                    <br />
+
+                                                    <div class=red-text>Team red score: ${addDot(currentMap.team_one_score)}</div>
+                                                    <div class=blue-text>Team blue score: ${addDot(currentMap.team_two_score)}</div>
+
+                                                    <br />
+
+                                                    ${winMessage}
                                                 </div>
                                             </div>
 
                                             <div class=mapButtons>
                                                 <button type=button class="btn btn-primary">Copy result</button>
-                                                <button type=button class="btn btn-danger">Recalculate score</button>
                                             </div>
                                         </div>`);
-
-                    console.log(currentMap);
                 }
                 
             });
