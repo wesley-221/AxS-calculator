@@ -23,7 +23,7 @@ initialize = async () => {
 // ==================
 // Initialize the app
 app.on('ready', () => {
-    mainWindow = new BrowserWindow({icon: __dirname + '/web/resources/images/axs.png', backgroundColor: '#3C4452'}); 
+    mainWindow = new BrowserWindow({icon: __dirname + '/web/resources/images/axs.ico', backgroundColor: '#3C4452'}); 
 
     mainWindow.on('close', () => {
         mainWindow = null;
