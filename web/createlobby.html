@@ -21,13 +21,12 @@
                     <div class=sb-header-text>
                         AxS calculator
                         <hr />
-                        <a href="#" class="btn btn-sb-menu btn-xs" title="User settings"><i class="far fa-user-circle"></i></a>
                         <a href="./settings.html" class="btn btn-sb-menu btn-xs" title="Settings"><i class="fas fa-cogs"></i></a> 
                     </div>
                 </div>
             
                 <div class=sb-navigation>
-                    <a href="#" class="sb-nav-column"><i class="fas fa-info"></i> Information</a>
+                    <a href="./index.html" class="sb-nav-column"><i class="fas fa-info"></i> Information</a>
                     <a href="./lobbyoverview.html" class="sb-nav-column"><i class="fas fa-bars"></i> Lobby overview</a>
                     <a href="./createlobby.html" class="sb-nav-column in"><i class="far fa-plus-square"></i> Create a lobby</a>
                 </div>
@@ -35,7 +34,7 @@
 
             <div class=mainContent>
                 <div class=form-group>
-                    <label for=matchDescription>Match description</label>
+                    <h2>Match description</h2>
                     <p>This will only be a description about the match so you can distinguish them from other matches.</p>
                     <input id=matchDescription type=text class=form-control placeholder="Match description" />
                 </div>
@@ -43,7 +42,7 @@
                 <hr />
                 
                 <div class=form-group>
-                    <label for=multiplayerLink>Multiplayer link</label>
+                    <h2>Multiplayer link</h2>
                     <p>
                         Enter a multiplayer link in here for the match you want to calculate the scores off. <br /><br />
                         Accepted URL's: <br />
@@ -57,7 +56,7 @@
                 <div class=row>
                     <div class=col-6>
                         <div class=form-group>
-                            <label for=teamOneName>Team one name</label>
+                            <h2>Team one name</h2>
                             <p>
                                 Enter the name of the first team. This will be team <span class=red-text>red</span> and has slot 1, 2 and 3.
                             </p>
@@ -67,7 +66,7 @@
 
                     <div class=col-6>
                         <div class=form-group>
-                            <label for=teamTwoName>Team two name</label>
+                            <h2>Team two name</h2>
                             <p>
                                 Enter the name of the second team. This will be team <span class=blue-text>red</span> and has slot 4, 5 and 6.
                             </p>
@@ -115,7 +114,7 @@
             // This will be called when the match has been created
             ipcRenderer.on('matchHasBeenCreated', function(event, arg) {
                 $('#createLobbyAlert').css('display', 'block');
-                $('#lobbyText').html(`The match has been succesfully created. <a href="./lobbyview.html?lobby=${arg}">Click here to go to the lobby</a>.`);
+                $('#lobbyText').html(`The match has been succesfully created. <a href="./lobbyview.html?id=${arg}">Click here to go to the lobby</a>.`);
             });
         });
     </script>
