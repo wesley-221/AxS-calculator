@@ -204,6 +204,10 @@ body {
             height: 120px;
 
             background-color: $background-color;
+
+            #getMultiplayerData {
+                margin-right: calc(15px * 2);
+            }
         }
 
         .allMaps {
@@ -325,4 +329,12 @@ hr {
 
 h1, h2, h3, h4, h5, h6 {
     color: $primary;
+}
+
+.blue-text {
+    color: #2299bb;
+}
+
+.red-text {
+    color: #bb1177;
 }
