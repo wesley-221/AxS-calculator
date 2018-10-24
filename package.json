@@ -1,20 +1,25 @@
 {
   "name": "axs-scorecalculator",
+  "productName": "AxS Calculator",
   "version": "1.0.0",
   "description": "A calculator to calculate the score with the AxS score format",
   "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-win": "electron-packager . --overwrite --asar --platform=win32 --arch=ia32 --icon=web/resources/images/axs.ico --prune=true --out=release-builds",
+    "package-linux": "electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --icon=web/resources/images/axs.ico --prune=true --out=release-builds"
   },
   "repository": "",
   "keywords": [],
   "author": "Wesley",
   "license": "ISC",
   "devDependencies": {
-    "electron": "2.0.0"
+    "electron": "2.0.0",
+    "electron-packager": "^12.2.0"
   },
   "dependencies": {
     "electron-store": "^2.0.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.2"
   }
 }
