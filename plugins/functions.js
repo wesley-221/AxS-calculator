@@ -35,9 +35,14 @@ module.exports = {
         return x1 + x2;
     },
     calculateAccuracyPlayerScore: function(score) {
+        score = parseFloat(score);
+
         return (score * 0.2);
     },
     calculateScorePlayerScore: function(score, accuracy, modifier) {
+        score = parseFloat(score);
+        accuracy = parseFloat(accuracy);
+        
         return (score * (Math.pow((100 - ((100 - accuracy) / 5)) / 100, modifier)));
     },
     calculateTeamScore: function(score_player_one, score_player_two, score_player_three, accuracy_player_one, modifier) {
