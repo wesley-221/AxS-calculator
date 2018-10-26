@@ -69,16 +69,25 @@
             // =================================================
             // This will be called after requestMultiplayerLobby
             ipcRenderer.on('requestedLobby', (event, arg) => {
-                // All arg's
-                // ---------
-                // arg.cache
-                // arg.lobby
-                // arg.maps
+                // Get the score of the lobby
+                let teamOneScore = 0,
+                    teamTwoScore = 0;
+
+                for(let map in arg.maps) {
+                    const currentMap = arg.maps[map];
+
+                    if(currentMap.team_one_score > currentMap.team_two_score) {
+                        teamOneScore ++;
+                    }
+                    else {
+                        teamTwoScore ++;
+                    }
+                }
 
                 $('.matchHeader').append(`<h2>${arg.lobby.data.description}</h2>
                                             Multiplayer link: <a href="${arg.lobby.data.multiplayerLink}">${arg.lobby.data.multiplayerLink}</a><br />
 
-                                            <span id="scoreString">${arg.lobby.data.teamOneName} score: <span class=teamLoss>0</span> | <span class=teamWin>6</span> : ${arg.lobby.data.teamTwoName} score</span>
+                                            <span id="scoreString"><span class=red-text>Team ${arg.lobby.data.teamOneName}</span> score : <span class=teamLoss>${teamOneScore}</span> | <span class=teamWin>${teamTwoScore}</span> : score <span class=blue-text>Team ${arg.lobby.data.teamTwoName}</span></span>
                                             <button id=getMultiplayerData type=button class="btn btn-info float-right">Retrieve multiplayer data</button>
                                             <hr />`);
 
@@ -88,8 +97,8 @@
                     const teamOneColour = (currentMap.team_one_score > currentMap.team_two_score) ? 'teamWin' : 'teamLoss';
                     const teamTwoColour = (currentMap.team_two_score > currentMap.team_one_score) ? 'teamWin' : 'teamLoss';
 
-                    const winMessage = (currentMap.team_one_score > currentMap.team_two_score) ? `<span class=red-text>Team Red</span> has won. <span class=red-text>Team red</span> score: ${addDot(currentMap.team_one_score)} | <span class=blue-text>Team blue</span> score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_one_score - currentMap.team_two_score)}` : `<span class=blue-text>Team blue</span> has won. <span class=red-text>Team red</span> score: ${addDot(currentMap.team_one_score)} | <span class=blue-text>Team blue</span> score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_two_score - currentMap.team_one_score)}`;
-                    const copyMessage = (currentMap.team_one_score > currentMap.team_two_score) ? `Team Red has won. Team red score: ${addDot(currentMap.team_one_score)} | Team blue score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_one_score - currentMap.team_two_score)}` : `Team blue has won. Team red score: ${addDot(currentMap.team_one_score)} | Team blue score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_two_score - currentMap.team_one_score)}`;
+                    const winMessage = (currentMap.team_one_score > currentMap.team_two_score) ? `<span class=red-text>Team ${arg.lobby.data.teamOneName}</span> has won. <span class=red-text>Team ${arg.lobby.data.teamOneName}</span> score: ${addDot(currentMap.team_one_score)} | <span class=blue-text>Team ${arg.lobby.data.teamTwoName}</span> score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_one_score - currentMap.team_two_score)}` : `<span class=blue-text>Team ${arg.lobby.data.teamTwoName}</span> has won. <span class=red-text>Team ${arg.lobby.data.teamOneName}</span> score: ${addDot(currentMap.team_one_score)} | <span class=blue-text>Team ${arg.lobby.data.teamTwoName}</span> score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_two_score - currentMap.team_one_score)}`;
+                    const copyMessage = (currentMap.team_one_score > currentMap.team_two_score) ? `Team ${arg.lobby.data.teamOneName} has won. Team ${arg.lobby.data.teamOneName} score: ${addDot(currentMap.team_one_score)} | Team ${arg.lobby.data.teamTwoName} score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_one_score - currentMap.team_two_score)}` : `Team ${arg.lobby.data.teamTwoName} has won. Team ${arg.lobby.data.teamOneName} score: ${addDot(currentMap.team_one_score)} | Team ${arg.lobby.data.teamTwoName} score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_two_score - currentMap.team_one_score)}`;
 
                     const randomToken = generateToken(10);
 
@@ -102,52 +111,72 @@
                                                 </div>
 
                                                 <div class=mapModifier>
-                                                    ${(arg.cache.modifiers[currentMap.beatmap_id] == undefined) ? '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> There was no modifier set for this map. <a href="./modifiers.html">Make sure to set a modifier so you get the accurate score.</a></div>' : `<h6>${arg.cache.modifiers[currentMap.beatmap_id].modifier}</h6>`}
+                                                    ${(arg.cache.modifiers[currentMap.beatmap_id] == undefined) ? '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> There was no modifier set for this map. <a href="./modifiers.html">Make sure to set a modifier so you get the accurate score.</a></div>' : `<h6>Beatmap modifier: ${arg.cache.modifiers[currentMap.beatmap_id].modifier}</h6>`}
                                                 </div>
 
+                                                <hr />
+
                                                 <div class=mapScore>
+                                                    <h5>Team ${arg.lobby.data.teamOneName}</h5>
                                                     <table>
                                                         <tr>
+                                                            <td><b>Accuracy player</b></td>
+                                                            <td>&emsp;</td>
                                                             <td>${(arg.cache.users[currentMap[0].user] == undefined) ? 'Not connected' : arg.cache.users[currentMap[0].user]}</td>
                                                             <td>&emsp;</td>
                                                             <td>${addDot(parseFloat(currentMap[0].score).toFixed())} (${currentMap[0].accuracy}%)</td>
                                                         </tr>
 
                                                         <tr>
+                                                            <td><b>Score player</b></td>
+                                                            <td>&emsp;</td>
                                                             <td>${(arg.cache.users[currentMap[1].user] == undefined) ? 'Not connected' : arg.cache.users[currentMap[1].user]}</td>
                                                             <td>&emsp;</td>
                                                             <td>${addDot(parseFloat(currentMap[1].score).toFixed())} (${currentMap[1].accuracy}%)</td>
                                                         </tr>
 
                                                         <tr>
+                                                            <td><b>Score player</b></td>
+                                                            <td>&emsp;</td>
                                                             <td>${(arg.cache.users[currentMap[2].user] == undefined) ? 'Not connected' : arg.cache.users[currentMap[2].user]}</td>
                                                             <td>&emsp;</td>
                                                             <td>${addDot(parseFloat(currentMap[2].score).toFixed())} (${currentMap[2].accuracy}%)</td>
                                                         </tr>
+                                                    </table>
+                                                    
+                                                    <hr />
 
+                                                    <h5>Team ${arg.lobby.data.teamTwoName}</h5>
+                                                    <table>
                                                         <tr>
+                                                            <td><b>Accuracy player</b></td>
+                                                            <td>&emsp;</td>
                                                             <td>${(arg.cache.users[currentMap[3].user] == undefined) ? 'Not connected' : arg.cache.users[currentMap[3].user]}</td>
                                                             <td>&emsp;</td>
                                                             <td>${addDot(parseFloat(currentMap[3].score).toFixed())} (${currentMap[3].accuracy}%)</td>
                                                         </tr>
 
                                                         <tr>
+                                                            <td><b>Score player</b></td>
+                                                            <td>&emsp;</td>
                                                             <td>${(arg.cache.users[currentMap[4].user] == undefined) ? 'Not connected' : arg.cache.users[currentMap[4].user]}</td>
                                                             <td>&emsp;</td>
                                                             <td>${addDot(parseFloat(currentMap[4].score).toFixed())} (${currentMap[4].accuracy}%)</td>
                                                         </tr>
 
                                                         <tr>
+                                                            <td><b>Score player</b></td>
+                                                            <td>&emsp;</td>
                                                             <td>${(arg.cache.users[currentMap[5].user] == undefined) ? 'Not connected' : arg.cache.users[currentMap[5].user]}</td>
                                                             <td>&emsp;</td>
                                                             <td>${addDot(parseFloat(currentMap[5].score).toFixed())} (${currentMap[5].accuracy}%)</td>
                                                         </tr>
                                                     </table>
 
-                                                    <br />
+                                                    <hr />
 
-                                                    <div class=red-text>Team red score: ${addDot(currentMap.team_one_score)}</div>
-                                                    <div class=blue-text>Team blue score: ${addDot(currentMap.team_two_score)}</div>
+                                                    <div class=red-text>Team ${arg.lobby.data.teamOneName} score: ${addDot(currentMap.team_one_score)}</div>
+                                                    <div class=blue-text>Team ${arg.lobby.data.teamTwoName} score: ${addDot(currentMap.team_two_score)}</div>
 
                                                     <br />
 
@@ -157,7 +186,7 @@
 
                                             <div class=mapButtons>
                                                 <div id="copyresult_${randomToken}" class="green-text"></div>
-                                                <button id="copy_${randomToken}" data-${randomToken}="${copyMessage}" type=button class="btn btn-primary float-right">Copy result</button>
+                                                <button id="copy_${randomToken}" data-${randomToken}="${copyMessage}" type=button class="btn btn-primary">Copy result</button>
                                             </div>
                                         </div>`);
                 }
@@ -188,10 +217,11 @@
 
             document.body.removeChild(textArea);
 
+            $(`#copyresult_${thisId}`).addClass('in');
             $(`#copyresult_${thisId}`).html('Succesfully copied the result to your clipboard!');
 
             setTimeout(function() {
-                $(`#copyresult_${thisId}`).html('');
+                $(`#copyresult_${thisId}`).removeClass('in');
             }, 3000);
         });
 
