@@ -174,7 +174,7 @@ ipcMain.on('createLobby', async (event, arg) => {
             store.set(`lobby.${lobbyToken}.multiplayerData.${game}.team_one_score`, finalTeamOneScore);
             store.set(`lobby.${lobbyToken}.multiplayerData.${game}.team_two_score`, finalTeamTwoScore);
         }
-    });;
+    });
 
     // ==========================================================
     // Send a message to frontend that the match has been created
