@@ -79,13 +79,20 @@
                     const teamTwoColour = (currentMap.team_two_score > currentMap.team_one_score) ? 'teamWin' : 'teamLoss';
 
                     const winMessage = (currentMap.team_one_score > currentMap.team_two_score) ? `<span class=red-text>Team Red</span> has won. <span class=red-text>Team red</span> score: ${addDot(currentMap.team_one_score)} | <span class=blue-text>Team blue</span> score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_one_score - currentMap.team_two_score)}` : `<span class=blue-text>Team blue</span> has won. <span class=red-text>Team red</span> score: ${addDot(currentMap.team_one_score)} | <span class=blue-text>Team blue</span> score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_two_score - currentMap.team_one_score)}`;
+                    const copyMessage = (currentMap.team_one_score > currentMap.team_two_score) ? `Team Red has won. Team red score: ${addDot(currentMap.team_one_score)} | Team blue score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_one_score - currentMap.team_two_score)}` : `Team blue has won. Team red score: ${addDot(currentMap.team_one_score)} | Team blue score: ${addDot(currentMap.team_two_score)} | Score difference: ${addDot(currentMap.team_two_score - currentMap.team_one_score)}`;
+
+                    const randomToken = generateToken(10);
 
                     $('.allMaps').append(`<div class=multiMatch>
                                             <div class=mapPicture style='background-image: url("https://b.ppy.sh/thumb/${arg.cache.beatmaps[currentMap.beatmap_id].beatmapset_id}.jpg");'></div>
 
                                             <div class=mapContent>
                                                 <div class=mapTitle>
-                                                    ${arg.cache.beatmaps[currentMap.beatmap_id].name}
+                                                    <h4>${arg.cache.beatmaps[currentMap.beatmap_id].name}</h4>
+                                                </div>
+
+                                                <div class=mapModifier>
+                                                    ${(arg.cache.modifiers[currentMap.beatmap_id] == undefined) ? '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> There was no modifier set for this map. <a href="./modifiers.html">Make sure to set a modifier so you get the accurate score.</a></div>' : `<h6>${arg.cache.modifiers[currentMap.beatmap_id].modifier}</h6>`}
                                                 </div>
 
                                                 <div class=mapScore>
@@ -139,7 +146,8 @@
                                             </div>
 
                                             <div class=mapButtons>
-                                                <button type=button class="btn btn-primary">Copy result</button>
+                                                <div id="copyresult_${randomToken}" class="green-text"></div>
+                                                <button id="copy_${randomToken}" data-${randomToken}="${copyMessage}" type=button class="btn btn-primary float-right">Copy result</button>
                                             </div>
                                         </div>`);
                 }
@@ -155,6 +163,26 @@
                 // Request to get new multiplayerdata
                 ipcRenderer.send('retrieveMultiplayerData', lobbyId);
             });
+        });
+
+        $('body').on('click', '[id^=copy_]', function() {
+            const thisId = this.id.replace('copy_', '');
+            const copyMessage = $(this).attr(`data-${thisId}`);
+
+            let textArea = document.createElement("textarea");
+            textArea.value = copyMessage;
+            document.body.appendChild(textArea);
+
+            textArea.select();
+            document.execCommand('copy');
+
+            document.body.removeChild(textArea);
+
+            $(`#copyresult_${thisId}`).html('Succesfully copied the result to your clipboard!');
+
+            setTimeout(function() {
+                $(`#copyresult_${thisId}`).html('');
+            }, 3000);
         });
 
         // Open urls in the actual browser and not within the application
