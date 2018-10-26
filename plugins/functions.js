@@ -18,6 +18,30 @@ module.exports = {
 
         return false;
     },
+    getBeatmapIdFromUrl: function(url) {
+        const beatmapValidOld = new RegExp(/https:\/\/osu\.ppy\.sh\/(b|s)\/([0-9]+)/).exec(url);
+        const beatmapValidNew = new RegExp(/https:\/\/osu\.ppy\.sh\/beatmapsets\/[0-9]+\#[a-zA-Z]+\/([0-9]+)/).exec(url);
+
+        if(beatmapValidOld) {
+            if(beatmapValidOld[1] === 's') {
+                return false;
+            }
+            else if(beatmapValidOld[1] === 'b') {
+                return beatmapValidOld[2];
+            }
+        }
+        else if(beatmapValidNew) {
+            if(beatmapValidNew) {
+                return beatmapValidNew[1];
+            }
+            else {
+                return false;
+            }
+        }
+        else if(!isNaN(url)) {
+            return url;
+        }
+    },
     getAccuracyOfScore: function(score) {
         return (((parseInt(score.count50) + parseInt(score.count100) + parseInt(score.count300)) / (parseInt(score.count50) + parseInt(score.count100) + parseInt(score.count300) + parseInt(score.countmiss) + parseInt(score.countkatu))) * 100).toFixed(2);
     },

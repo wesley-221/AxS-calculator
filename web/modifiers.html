@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset=utf-8>
+        <meta name="robots" content="noindex, nofollow">
+
+        <title>Modifiers | AxS</title>
+
+        <link rel="shortcut icon" href="./resources/images/favicon.ico" type="image/x-icon" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+        <link href="./resources/css/style.css" rel="stylesheet" />
+        <!-- <link rel="shortcut icon" type="image/png" href="./resources/favicon.png"/> -->
+    </head>
+
+    <body>
+        <div class=container>
+            <div class=sideBar>
+                <div class=sb-header>
+                    <div class=sb-header-img></div>
+            
+                    <div class=sb-header-text>
+                        AxS calculator
+                        <hr />
+                        <a href="./settings.html" class="btn btn-sb-menu btn-xs" title="Settings"><i class="fas fa-cogs"></i></a> 
+                    </div>
+                </div>
+            
+                <div class=sb-navigation>
+                    <a href="./index.html" class="sb-nav-column"><i class="fas fa-info"></i> Information</a>
+                    <a href="./lobbyoverview.html" class="sb-nav-column"><i class="fas fa-bars"></i> Lobby overview</a>
+                    <a href="./createlobby.html" class="sb-nav-column"><i class="far fa-plus-square"></i> Create a lobby</a>
+                    <a href="./modifiers.html" class="sb-nav-column in"><i class="far fa-times-circle"></i> Modifiers</a>
+                </div>
+            </div>
+
+            <div class=mainContent>
+                <h1>Modifiers</h1>
+                <p>
+                    Here you can set the modifiers per map. The modifier is used in the score calculation. <br />
+                    Make sure that the link you are entering is from the <span class=green-text>beatmap_id</span>, and not the <span class=red-text>beatmapset_id</span> when using links from the old website. Links from the new osu! website works as well.<br />
+                    
+                    <table>
+                        <tr>
+                            <td>Beatmap_id:</td>
+                            <td>&emsp;</td>
+                            <td><span class=green-text>https://osu.ppy.sh/b/1179823?m=2</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>Beatmapset_id:</td>
+                            <td>&emsp;</td>
+                            <td><span class=red-text>https://osu.ppy.sh/s/515878</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>New website:</td>
+                            <td>&emsp;</td>
+                            <td><span class=green-text>https://osu.ppy.sh/beatmapsets/515878#fruits/1179823</span></td>
+                        </tr>
+                    </table>
+                    
+                    <br /><b>NOTE:</b> If there is no modifier entered for the specific <span class=green-text>beatmap_id</span>, the modifier will be set to 0.
+                </p>
+
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <th>Beatmap name</th>
+                        <th>Beatmap link</th>
+                        <th>Modifier</th>
+                        <th><button type=button class="btn btn-primary" id=createNewModifier>Create new modifier</button></th>
+                    </thead>
+
+                    <tbody id=allModifiers></tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="./resources/js/jquery-3.3.1.min.js"></script>
+    <script src="./resources/js/bootstrap.min.js"></script>
+    <script src="./resources/js/functions.js"></script>
+    <script>if (window.module) module = window.module;</script>
+
+    <script>
+        const {ipcRenderer, remote} = require('electron');
+
+        $(() => {
+            // Request the modifiers from the cache
+            ipcRenderer.send('requestAllModifiers', true);
+
+            ipcRenderer.on('requestedModifiers', (event, arg) => {
+                for(let beatmap in arg) {
+                    const currentModifier = arg[beatmap];
+
+                    $('#allModifiers').append(`<tr id=${currentModifier.beatmap_id}>
+                                                <td>${currentModifier.beatmap_name}</td>
+                                                <td>
+                                                    <input id="beatmap_${currentModifier.beatmap_id}" type=text class=form-control placeholder="Beatmap url" value="${currentModifier.beatmap_id}" />
+                                                </td>
+
+                                                <td>
+                                                    <input id="modifier_${currentModifier.beatmap_id}" type=text class=form-control placeholder="Modifier" value="${currentModifier.modifier}" />
+                                                </td>
+
+                                                <td>
+                                                    <button type=button id="save_${currentModifier.beatmap_id}" class="btn btn-sb-menu btn-xs" title="Save"><i class="far fa-save"></i></button>
+                                                    <button type=button id="remove_${currentModifier.beatmap_id}" class="btn btn-sb-menu btn-xs" title="Remove"><i class="far fa-trash-alt"></i></button>
+                                                    <span class=red-text id=error_${currentModifier.beatmap_id}></span>
+                                                    <span class=green-text id=message_${currentModifier.beatmap_id}></span>
+                                                </td>
+                                            </tr>`);
+                }
+            });
+
+            $('#createNewModifier').on('click', function() {
+                const randomToken = generateToken(10);
+
+                $('#allModifiers').append(`<tr id=${randomToken}>
+                                                <td></td>
+                                                <td>
+                                                    <input id="beatmap_${randomToken}" type=text class=form-control placeholder="Beatmap url" />
+                                                </td>
+
+                                                <td>
+                                                    <input id="modifier_${randomToken}" type=text class=form-control placeholder="Modifier" />
+                                                </td>
+
+                                                <td>
+                                                    <button type=button id="save_${randomToken}" class="btn btn-sb-menu btn-xs" title="Save"><i class="far fa-save"></i></button>
+                                                    <button type=button id="remove_${randomToken}" class="btn btn-sb-menu btn-xs" title="Remove"><i class="far fa-trash-alt"></i></button>
+                                                    <span class=red-text id=error_${randomToken}></span>
+                                                    <span class=green-text id=message_${randomToken}></span>
+                                                </td>
+                                            </tr>`);
+            });
+        });
+
+        $('#allModifiers').on('click', '[id^=save_]', function() {
+            const thisId = this.id.replace('save_', '');
+            const beatmapUrl = $(`#beatmap_${thisId}`).val();
+            const modifier  = $(`#modifier_${thisId}`).val();
+
+            if(!isValidBeatmapUrl(beatmapUrl)) {
+                $(`#error_${thisId}`).html('Invalid beatmap url');
+            }
+            else if(!$.isNumeric(modifier)) {
+                $(`#error_${thisId}`).html('Invalid modifier');
+            }
+            else {
+                $(`#error_${thisId}`).html('');
+                
+                // Create a new modifier
+                ipcRenderer.send('createBeatmapModifier', {
+                    'beatmapUrl': beatmapUrl,
+                    'modifier': modifier
+                });
+
+                $(`#message_${thisId}`).html('Saved!');
+            }
+        });
+
+        $('#allModifiers').on('click', '[id^=remove_]', function() {
+            const thisId = this.id.replace('remove_', '');
+
+            $(`#${thisId}`).remove();
+        });
+    </script>
+</html>

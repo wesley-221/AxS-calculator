@@ -17,7 +17,7 @@ initialize = async () => {
 
     // Create the cache if it doesn't exist
     if(cache == undefined)
-        await store.set('cache', {"beatmaps": {}, "users": {}});
+        await store.set('cache', {"beatmaps": {}, "users": {}, "modifiers": {}});
 }
 
 // ==================
@@ -86,7 +86,7 @@ ipcMain.on('createLobby', async (event, arg) => {
     });
 
     const apiKey        = store.get('api-key');
-    let cache         = store.get('cache');
+    let cache           = store.get('cache');
     const multiplayerId = fnc.getMultiplayerIdFromUrl(arg['match-url']);
 
     await rp(`https://osu.ppy.sh/api/get_match?k=${apiKey}&mp=${multiplayerId}`).then(async multiplayerLobby => {
@@ -95,8 +95,15 @@ ipcMain.on('createLobby', async (event, arg) => {
         // Loop through all the games
         for(let game in multiplayerLobby.games) {
             const currentGame = multiplayerLobby.games[game];
-
             let gameScore = {};
+            let currentModifier;
+
+            if(cache.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
+                currentModifier = cache.modifiers[currentGame.beatmap_id].modifier;
+            }
+            else {
+                currentModifier = 0;
+            }
 
             // Loop through all the scores of the current map
             for(let score in currentGame.scores) {
@@ -110,8 +117,6 @@ ipcMain.on('createLobby', async (event, arg) => {
                         cache.users[currentScore.user_id] = user[0].username;
                         store.set(`cache.users.${currentScore.user_id}`, user[0].username);
                     });
-
-                    console.log(`user ${currentScore.user_id} not cached`);
                 }
 
                 // Accuracy players
@@ -126,7 +131,7 @@ ipcMain.on('createLobby', async (event, arg) => {
                 // Score players
                 else if(['1','2','4','5'].indexOf(currentScore.slot) > -1) {
                     gameScore.user = currentScore.user_id;
-                    gameScore.score = (currentScore.pass == 0 ? 0 : fnc.calculateScorePlayerScore(currentScore.score, fnc.getAccuracyOfScore(currentScore), 7));
+                    gameScore.score = (currentScore.pass == 0 ? 0 : fnc.calculateScorePlayerScore(currentScore.score, fnc.getAccuracyOfScore(currentScore), currentModifier));
                     gameScore.accuracy = (currentScore.pass == 0 ? 0 : fnc.getAccuracyOfScore(currentScore));
                     gameScore.passed = currentScore.pass;
 
@@ -146,8 +151,6 @@ ipcMain.on('createLobby', async (event, arg) => {
                         beatmapset_id: beatmap[0].beatmapset_id
                     });
                 });
-
-                console.log(`beatmap ${currentGame.beatmap_id} not cached`);
             }
         }
     }).finally(() => {
@@ -156,9 +159,17 @@ ipcMain.on('createLobby', async (event, arg) => {
         // Loop through the games
         for(let game in multiplayerGames) {
             const currentGame = multiplayerGames[game];
+            let currentModifier;
 
-            const finalTeamOneScore = parseFloat(fnc.calculateTeamScore(currentGame[0].score, currentGame[1].score, currentGame[2].score, currentGame[0].accuracy, 7));
-            const finalTeamTwoScore = parseFloat(fnc.calculateTeamScore(currentGame[3].score, currentGame[4].score, currentGame[5].score, currentGame[3].accuracy, 7));
+            if(cache.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
+                currentModifier = cache.modifiers[currentGame.beatmap_id].modifier;
+            }
+            else {
+                currentModifier = 0;
+            }
+
+            const finalTeamOneScore = parseFloat(fnc.calculateTeamScore(currentGame[0].score, currentGame[1].score, currentGame[2].score, currentGame[0].accuracy, currentModifier));
+            const finalTeamTwoScore = parseFloat(fnc.calculateTeamScore(currentGame[3].score, currentGame[4].score, currentGame[5].score, currentGame[3].accuracy, currentModifier));
 
             store.set(`lobby.${lobbyToken}.multiplayerData.${game}.team_one_score`, finalTeamOneScore);
             store.set(`lobby.${lobbyToken}.multiplayerData.${game}.team_two_score`, finalTeamTwoScore);
@@ -208,8 +219,15 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
             // Loop through all the games
             for(let game in multiplayerLobby.games) {
                 const currentGame = multiplayerLobby.games[game];
-
                 let gameScore = {};
+                let currentModifier;
+
+                if(cache.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
+                    currentModifier = cache.modifiers[currentGame.beatmap_id].modifier;
+                }
+                else {
+                    currentModifier = 0;
+                }
 
                 // Loop through all the scores of the current map
                 for(let score in currentGame.scores) {
@@ -237,7 +255,7 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
                     // Score players
                     else if(['1','2','4','5'].indexOf(currentScore.slot) > -1) {
                         gameScore.user = currentScore.user_id;
-                        gameScore.score = (currentScore.pass == 0 ? 0 : fnc.calculateScorePlayerScore(currentScore.score, fnc.getAccuracyOfScore(currentScore), 7));
+                        gameScore.score = (currentScore.pass == 0 ? 0 : fnc.calculateScorePlayerScore(currentScore.score, fnc.getAccuracyOfScore(currentScore), currentModifier));
                         gameScore.accuracy = (currentScore.pass == 0 ? 0 : fnc.getAccuracyOfScore(currentScore));
                         gameScore.passed = currentScore.pass;
 
@@ -270,15 +288,75 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
             // Loop through the games
             for(let game in multiplayerGames) {
                 const currentGame = multiplayerGames[game];
+                let currentModifier;
 
-                const finalTeamOneScore = parseFloat(fnc.calculateTeamScore(currentGame[0].score, currentGame[1].score, currentGame[2].score, currentGame[0].accuracy, 7));
-                const finalTeamTwoScore = parseFloat(fnc.calculateTeamScore(currentGame[3].score, currentGame[4].score, currentGame[5].score, currentGame[3].accuracy, 7));
+                if(cache.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
+                    currentModifier = cache.modifiers[currentGame.beatmap_id].modifier;
+                }
+                else {
+                    currentModifier = 0;
+                }
+
+                const finalTeamOneScore = parseFloat(fnc.calculateTeamScore(currentGame[0].score, currentGame[1].score, currentGame[2].score, currentGame[0].accuracy, currentModifier));
+                const finalTeamTwoScore = parseFloat(fnc.calculateTeamScore(currentGame[3].score, currentGame[4].score, currentGame[5].score, currentGame[3].accuracy, currentModifier));
 
                 store.set(`lobby.${lobbyId}.multiplayerData.${game}.team_one_score`, finalTeamOneScore);
                 store.set(`lobby.${lobbyId}.multiplayerData.${game}.team_two_score`, finalTeamTwoScore);
             }
+
+            mainWindow.webContents.send('refreshPage', true);
         });
     }
+});
+
+// ==================================================
+// This is called when a user loads the modifier page
+ipcMain.on('requestAllModifiers', (event, arg) => {
+    const allModifiers = store.get('cache.modifiers');
+
+    // Send back a response to the front end
+    mainWindow.webContents.send('requestedModifiers', allModifiers);
+});
+
+// =========================================================
+// This is called when a user succesfully creates a modifier
+ipcMain.on('createBeatmapModifier', async (event, arg) => {
+    const apiKey    = store.get('api-key');
+    const beatmapId = fnc.getBeatmapIdFromUrl(arg.beatmapUrl);
+    let cache       = store.get('cache');
+
+    // Check if the beatmap was already cached
+    if(cache.beatmaps.hasOwnProperty(beatmapId)) {
+        store.set(`cache.modifiers.${beatmapId}`, {
+            'beatmap_name': cache.beatmaps[beatmapId].name,
+            'beatmap_id': beatmapId,
+            'modifier': arg.modifier
+        });
+    }
+    else {
+        await rp(`https://osu.ppy.sh/api/get_beatmaps?k=${apiKey}&b=${beatmapId}&m=2&a=1`).then(beatmap => {
+            beatmap = JSON.parse(beatmap);
+            
+            cache.beatmaps[beatmapId] = {
+                name: `${beatmap[0].artist} - ${beatmap[0].title} [${beatmap[0].version}]`,
+                beatmapset_id: beatmap[0].beatmapset_id
+            };
+
+            store.set(`cache.beatmaps.${beatmapId}`, {
+                name: `${beatmap[0].artist} - ${beatmap[0].title} [${beatmap[0].version}]`,
+                beatmapset_id: beatmap[0].beatmapset_id
+            });
+
+            store.set(`cache.modifiers.${beatmapId}`, {
+                'beatmap_name': `${beatmap[0].artist} - ${beatmap[0].title} [${beatmap[0].version}]`,
+                'beatmap_id': beatmapId,
+                'modifier': arg.modifier
+            });
+        });   
+    }
+
+    // Send back a responserequestedLobby to the front end 
+    mainWindow.webContents.send('modifierCreated', arg.beatmapUrl);
 });
 
 // ==================================================
