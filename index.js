@@ -158,14 +158,26 @@ ipcMain.on('createLobby', async (event, arg) => {
 
         // Loop through the games
         for(let game in multiplayerGames) {
-            const currentGame = multiplayerGames[game];
+            let currentGame = multiplayerGames[game];
             let currentModifier;
 
+            // ===================
+            // Handle the modifier
             if(cache.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
                 currentModifier = cache.modifiers[currentGame.beatmap_id].modifier;
             }
             else {
                 currentModifier = 0;
+            }
+
+            // ================================================
+            // Set undefined scores to 0 score and 85% accuracy
+            for(let i = 0; i < 6; i ++) {
+                if(currentGame[i] == undefined) {
+                    currentGame[i] = {"user": "-1", "score": "0", "accuracy": "85.00", "passed": "0"};
+
+                    store.set(`lobby.${lobbyToken}.multiplayerData.${game}.${i}`, currentGame[i]);
+                }
             }
 
             const finalTeamOneScore = parseFloat(fnc.calculateTeamScore(currentGame[0].score, currentGame[1].score, currentGame[2].score, currentGame[0].accuracy, currentModifier));
@@ -287,14 +299,26 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
 
             // Loop through the games
             for(let game in multiplayerGames) {
-                const currentGame = multiplayerGames[game];
+                let currentGame = multiplayerGames[game];
                 let currentModifier;
 
+                // ===================
+                // Handle the modifier
                 if(cache.modifiers.hasOwnProperty(currentGame.beatmap_id)) {
                     currentModifier = cache.modifiers[currentGame.beatmap_id].modifier;
                 }
                 else {
                     currentModifier = 0;
+                }
+
+                // ================================================
+                // Set undefined scores to 0 score and 85% accuracy
+                for(let i = 0; i < 6; i ++) {
+                    if(currentGame[i] == undefined) {
+                        currentGame[i] = {"user": "-1", "score": "0", "accuracy": "85.00", "passed": "0"};
+
+                        store.set(`lobby.${lobbyToken}.multiplayerData.${game}.${i}`, currentGame[i]);
+                    }
                 }
 
                 const finalTeamOneScore = parseFloat(fnc.calculateTeamScore(currentGame[0].score, currentGame[1].score, currentGame[2].score, currentGame[0].accuracy, currentModifier));
