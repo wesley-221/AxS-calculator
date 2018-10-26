@@ -407,6 +407,39 @@ ipcMain.on('createBeatmapModifier', async (event, arg) => {
     mainWindow.webContents.send('modifierCreated', arg.beatmapUrl);
 });
 
+// =============================================
+// This is called when exporting the config file
+ipcMain.on('exportConfigFile', (event, arg) => {
+    let configFile = store.store;
+
+    // Remove the api key from the content
+    configFile['api-key'] = {"key": "redacted", "valid": true};
+
+    // Send the config file to the front end
+    mainWindow.webContents.send('exportedConfigFile', configFile);
+});
+
+// =================================================
+// This is called when attempting to clear the cache
+ipcMain.on('clearCache', (event, arg) => {
+    store.delete('cache');
+    store.set('cache', {"beatmaps": {}, "users": {}, "modifiers": {}});
+
+    // Send a response to the front end
+    mainWindow.webContents.send('clearedCache', true);
+});
+
+// ====================================================
+// This is called when attempting to remove the api key
+ipcMain.on('removeApiKey', (event, arg) => {
+    store.delete('api-key');
+    store.set('api-key', {"key": "", "valid": false});
+
+    // Send a response to the front end
+    mainWindow.webContents.send('removedApiKey', true);
+});
+
+
 // ==================================================
 // Prevent the app from crashing when an error occurs
 process.on("uncaughtException", err => {

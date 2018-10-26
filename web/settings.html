@@ -34,15 +34,63 @@
             </div>
 
             <div class=mainContent>
-                <div class=form-group>
-                    <h2>API key</h2>
-                    <p>Enter your osu!API key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The API key can be found <a href="https://osu.ppy.sh/p/api">here</a>.</p>
-                    <input id=apiKey type=password class=form-control placeholder="osu!API key" />
+                <div class=row>
+                    <div class=col-12>
+                        <div class=form-group>
+                            <h2>API key</h2>
+                            <p>Enter your osu!API key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The API key can be found <a href="https://osu.ppy.sh/p/api">here</a>.</p>
+                            <input id=apiKey type=password class=form-control placeholder="osu!API key" />
+                        </div>
+
+                        <div id=message></div>
+
+                        <input id=saveButton type="button" class="btn btn-primary float-right" value="Save" />
+                    </div>
                 </div>
 
-                <div id=message></div>
+                <hr />
 
-                <input id=saveButton type="button" class="btn btn-primary float-right" value="Save" />
+                <div class=row>
+                    <div class=col-12>
+                        <div class=row>
+                            <div class=col-7>
+                                This will export the config file and save it as a file in case you need to share it with someone. <br />
+                                <b>Note:</b> It will not export the API key in the file <br />
+
+                                <textarea id="exportedConfigFile" class="form-control" rows="5"></textarea>
+                                <br />
+
+                                <button id="exportConfigFile" type="button" class="btn btn-primary">Export config file</button>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class=row>
+                            <div class=col-7>
+                                This will clear all the cache. <br />
+
+                                <div id="clearCacheMessage" class="alert alert-success no-show">Succesfully cleared the cache.</div>
+
+                                <button id="clearCache" type="button" class="btn btn-primary">Clear cache</button>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class=row>
+                            <div class=col-7>
+                                This will remove the API key. <br />
+
+                                <div id="removeApiKeyMessage" class="alert alert-success no-show">Succesfully removed the API key.</div>
+
+                                <button id="removeApiKey" type="button" class="btn btn-primary">Remove API key</button>
+                            </div>
+                        </div>
+
+                        <hr />
+                    </div>
+                </div>
             </div>
         </div>
     </body>
@@ -77,6 +125,35 @@
             // When an error is returned
             ipcRenderer.on('errorMessage', (event, errorMessage) => {
                 $('#message').html(`<div class="alert alert-danger col-7"><h2><i class="fas fa-exclamation-triangle"></i> Error</h2> ${errorMessage}</div>`);
+            });
+
+            $('#exportConfigFile').on('click', function() {
+                // Send a request to export the config file
+                ipcRenderer.send('exportConfigFile', true);
+            });
+
+            ipcRenderer.on('exportedConfigFile', (event, arg) => {
+                $('#exportedConfigFile').html(JSON.stringify(arg, null, '\t'));
+            });
+
+            $('#clearCache').on('click', function() {
+                // send a request to clear the cache
+                ipcRenderer.send('clearCache', true);
+            });
+
+            // When the cache has been cleared
+            ipcRenderer.on('clearedCache', (event, arg) => {
+                $('#clearCacheMessage').removeClass('no-show');
+            });
+
+            $('#removeApiKey').on('click', function() {
+                // send a request to remove the api key
+                ipcRenderer.send('removeApiKey', true);
+            });
+
+            // When the cache has been cleared
+            ipcRenderer.on('removedApiKey', (event, arg) => {
+                $('#removeApiKeyMessage').removeClass('no-show');
             });
         });
 
