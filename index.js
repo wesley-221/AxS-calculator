@@ -251,7 +251,7 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
                             user = JSON.parse(user);
                             
                             cache.users[currentScore.user_id] = user[0].username;
-                            store.set(`cache.users.${currentScore.user_id}`, user.username);
+                            store.set(`cache.users.${currentScore.user_id}`, user[0].username);
                         });
                     }
 
@@ -317,7 +317,7 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
                     if(currentGame[i] == undefined) {
                         currentGame[i] = {"user": "-1", "score": "0", "accuracy": "85.00", "passed": "0"};
 
-                        store.set(`lobby.${lobbyToken}.multiplayerData.${game}.${i}`, currentGame[i]);
+                        store.set(`lobby.${lobbyId}.multiplayerData.${game}.${i}`, currentGame[i]);
                     }
                 }
 
