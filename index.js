@@ -18,6 +18,12 @@ initialize = async () => {
     // Create the cache if it doesn't exist
     if(cache == undefined)
         await store.set('cache', {"beatmaps": {}, "users": {}, "modifiers": {}});
+
+    const apiKey = store.get('api-key');
+
+    // Create the api-key if it doesn't exist
+    if(apiKey == undefined)
+        await store.set('api-key', {"key": "", "valid": false});
 }
 
 // ==================
@@ -54,17 +60,30 @@ app.on('activate', () => {
 });
 
 ipcMain.on('saveAPIKey', (event, apiKey) => {
-    store.set('api-key', apiKey);
+    rp(`https://osu.ppy.sh/api/get_user?k=${apiKey}&u=2407265`).then(user => {
+        store.set('api-key', {
+            'key': apiKey,
+            'valid': true
+        });
 
-    // =======================================================
-    // Send a message to frontend that the data has been saved
-    mainWindow.webContents.send(`savedData`, true);
+        // =======================================================
+        // Send a message to frontend that the data has been saved
+        mainWindow.webContents.send(`savedData`, true);
+    }).catch(function(err) {
+        err = JSON.parse(err.error);
+
+        mainWindow.webContents.send(`errorMessage`, err.error);
+    });
 });
+
+// @@@@@@@@@@@@@@@@@@@@@@@
+// FIX API VALIDATION
+// @@@@@@@@@@@@@@@@@@@@@@@
 
 // ==============================================
 // This is called when you load the settings page
 ipcMain.on('requestAPIKey', (event, arg) => {
-    const apiKey = store.get('api-key');
+    const apiKey = store.get('api-key.key');
 
     if(apiKey !== undefined) {
         // Send the api key back to the front end
@@ -85,7 +104,7 @@ ipcMain.on('createLobby', async (event, arg) => {
         teamTwoName:        arg['team-two-name']
     });
 
-    const apiKey        = store.get('api-key');
+    const apiKey        = store.get('api-key.key');
     let cache           = store.get('cache');
     const multiplayerId = fnc.getMultiplayerIdFromUrl(arg['match-url']);
 
@@ -217,7 +236,7 @@ ipcMain.on('requestMultiplayerLobby', (event, lobbyId) => {
 // ==========================================================
 // This is called when the user requests new multiplayer data
 ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
-    const apiKey    = store.get('api-key');
+    const apiKey    = store.get('api-key.key');
     const lobby     = store.get(`lobby.${lobbyId}`);
     let cache       = store.get(`cache`);
 
@@ -345,7 +364,7 @@ ipcMain.on('requestAllModifiers', (event, arg) => {
 // =========================================================
 // This is called when a user succesfully creates a modifier
 ipcMain.on('createBeatmapModifier', async (event, arg) => {
-    const apiKey    = store.get('api-key');
+    const apiKey    = store.get('api-key.key');
     const beatmapId = fnc.getBeatmapIdFromUrl(arg.beatmapUrl);
     let cache       = store.get('cache');
 

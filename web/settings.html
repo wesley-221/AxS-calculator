@@ -40,6 +40,8 @@
                     <input id=apiKey type=password class=form-control placeholder="osu!API key" />
                 </div>
 
+                <div id=message></div>
+
                 <input id=saveButton type="button" class="btn btn-primary float-right" value="Save" />
             </div>
         </div>
@@ -61,7 +63,7 @@
 
             // This is called when the data has been saved
             ipcRenderer.on('savedData', (event, arg) => {
-                $('.mainContent').append(`<div class="alert alert-success col-7"><h2><i class="fas fa-check"></i> Success!</h2>Succesfully saved your API key.</div>`);
+                $('#message').html(`<div class="alert alert-success col-7"><h2><i class="fas fa-check"></i> Success!</h2>Succesfully saved your API key.</div>`);
             });
 
             // Request the api key
@@ -70,7 +72,12 @@
             // The api key that you requested
             ipcRenderer.on('requestedAPIKey', (event, apiKey) => {
                 $('#apiKey').val(apiKey);
-            });          
+            });
+
+            // When an error is returned
+            ipcRenderer.on('errorMessage', (event, errorMessage) => {
+                $('#message').html(`<div class="alert alert-danger col-7"><h2><i class="fas fa-exclamation-triangle"></i> Error</h2> ${errorMessage}</div>`);
+            });
         });
 
         // Open urls in the actual browser and not within the application
