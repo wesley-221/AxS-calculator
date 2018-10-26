@@ -57,3 +57,7 @@ function isValidBeatmapUrl(url) {
         return url;
     }
 }
+
+$('body').on('click', '.apiError', function() {
+    $(this).remove();
+});

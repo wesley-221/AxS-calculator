@@ -342,3 +342,15 @@ h1, h2, h3, h4, h5, h6 {
 .green-text {
     color: #81a50e;
 }
+
+.apiError {
+    position: absolute;
+
+    width: calc(100% - 14px);
+    top: 20px;
+
+    margin-left: 7px;
+    margin-right: 7px;
+
+    cursor: pointer;
+}

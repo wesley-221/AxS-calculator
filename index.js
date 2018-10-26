@@ -76,9 +76,14 @@ ipcMain.on('saveAPIKey', (event, apiKey) => {
     });
 });
 
-// @@@@@@@@@@@@@@@@@@@@@@@
-// FIX API VALIDATION
-// @@@@@@@@@@@@@@@@@@@@@@@
+// ========================================================
+// This is called on the pages where an API key is required
+ipcMain.on('requestApiValidation', (event, arg) => {
+    const apiKeyValid = store.get('api-key.valid');
+
+    // Send back the state of the api key to the front end
+    mainWindow.webContents.send(`onRequestedApiValidation`, apiKeyValid);
+});
 
 // ==============================================
 // This is called when you load the settings page
