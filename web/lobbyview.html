@@ -87,7 +87,7 @@
                 $('.matchHeader').append(`<h2>${arg.lobby.data.description}</h2>
                                             Multiplayer link: <a href="${arg.lobby.data.multiplayerLink}">${arg.lobby.data.multiplayerLink}</a><br />
 
-                                            <span id="scoreString"><span class=red-text>Team ${arg.lobby.data.teamOneName}</span> score : <span class=teamLoss>${teamOneScore}</span> | <span class=teamWin>${teamTwoScore}</span> : score <span class=blue-text>Team ${arg.lobby.data.teamTwoName}</span></span>
+                                            <span id="scoreString"><span class=red-text>Team ${arg.lobby.data.teamOneName}</span> score : <span class=${(teamOneScore > teamTwoScore) ? 'teamWin' : 'teamLoss'}>${teamOneScore}</span> | <span class=${(teamOneScore > teamTwoScore) ? 'teamLoss' : 'teamWin'}>${teamTwoScore}</span> : score <span class=blue-text>Team ${arg.lobby.data.teamTwoName}</span></span>
                                             <button id=getMultiplayerData type=button class="btn btn-info float-right">Retrieve multiplayer data</button>
                                             <hr />`);
 
