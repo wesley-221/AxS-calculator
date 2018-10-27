@@ -78,7 +78,7 @@
                 
                 <hr />
 
-                <input type=button id=createLobby class="btn btn-primary float-right" value="Create" />
+                <button type=button id=createLobby class="btn btn-primary float-right">Create</button>
 
                 <div class=row>
                     <div class=col>
@@ -114,6 +114,8 @@
             });
 
             $('#createLobby').on('click', () => {
+                $('#createLobby').html('Create <i class="fas fa-spinner fa-spin"></i>');
+
                 // Create a lobby with the filled in data
                 ipcRenderer.send('createLobby', {
                     'match-description': $('#matchDescription').val(),
@@ -127,6 +129,7 @@
             ipcRenderer.on('matchHasBeenCreated', function(event, arg) {
                 $('#createLobbyAlert').css('display', 'block');
                 $('#lobbyText').html(`The match has been succesfully created. <a href="./lobbyview.html?id=${arg}">Click here to go to the lobby</a>.`);
+                $('#createLobby').html('Create');
             });
         });
     </script>
