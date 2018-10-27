@@ -6,6 +6,7 @@ The config file can be found in `%appdata%/AxSCalculator`. This is the only plac
 
 # Compiling
 To compile the application yourself, you have to follow the following steps:
+
 - Download and install [Node.js](https://nodejs.org/en/)
 - Download the repository
 - Run the command `npm install` in the dir of the repository and wait for it to download all the packages
