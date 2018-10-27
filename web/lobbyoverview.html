@@ -76,7 +76,7 @@
 
                                                         <div class=col-1>
                                                             <div class=multiplayerClose>
-                                                                <button type=button class="btn btn-danger">Delete</button>
+                                                                <button id="delete_${lobbyId}" type=button class="btn btn-danger">Delete</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -85,9 +85,24 @@
                 }
             });
 
+            // When a lobby is deleted
+            ipcRenderer.on('deletedLobby', (event, arg) => {
+                window.location.reload();
+            });
+
             // When you click on a multiplayer lobby block
-            $('.mainContent').on('click', '.multiplayerLobby', function() {
-                window.location.href = `./lobbyview.html?id=${$(this).data('href')}`;
+            $('.mainContent').on('click', '.multiplayerLobby', function(e) {
+                if(e.target.id.startsWith('delete_')) {
+                    if(confirm('Are you sure you want to delete this lobby?')) {
+                        const thisId = e.target.id.replace('delete_', '');
+                        
+                        // Delete a specific lobby
+                        ipcRenderer.send('deleteLobby', thisId);
+                    }
+                }
+                else {
+                    window.location.href = `./lobbyview.html?id=${$(this).data('href')}`;
+                }
             });
         });
     </script>

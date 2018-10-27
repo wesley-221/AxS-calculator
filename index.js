@@ -439,6 +439,14 @@ ipcMain.on('removeApiKey', (event, arg) => {
     mainWindow.webContents.send('removedApiKey', true);
 });
 
+// ====================================
+// This is called when deleting a lobby
+ipcMain.on('deleteLobby', (event, arg) => {
+    store.delete(`lobby.${arg}`);
+
+    // Send a response to the front end
+    mainWindow.webContents.send('deletedLobby', true);
+});
 
 // ==================================================
 // Prevent the app from crashing when an error occurs
