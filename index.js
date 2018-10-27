@@ -455,6 +455,15 @@ ipcMain.on('exportModifiers', (event, arg) => {
     mainWindow.webContents.send('exportedModifiers', store.get('cache.modifiers'));
 });
 
+// =======================================
+// This is called when deleting a modifier
+ipcMain.on('deleteModifier', (event, arg) => {
+    store.delete(`cache.modifiers.${arg}`);
+
+    // Send a response to the front end
+    mainWindow.webContents.send('deletedModifier', arg);
+});
+
 // ==================================================
 // Prevent the app from crashing when an error occurs
 process.on("uncaughtException", err => {

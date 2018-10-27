@@ -144,6 +144,10 @@
                                                 </td>
                                             </tr>`);
             });
+
+            ipcRenderer.on('deletedModifier', (event, arg) => {
+                $(`#${arg}`).remove();
+            });
         });
 
         $('#allModifiers').on('click', '[id^=save_]', function() {
@@ -173,7 +177,8 @@
         $('#allModifiers').on('click', '[id^=remove_]', function() {
             const thisId = this.id.replace('remove_', '');
 
-            $(`#${thisId}`).remove();
+            // Delete a modifier
+            ipcRenderer.send('deleteModifier', thisId);
         });
     </script>
 </html>
