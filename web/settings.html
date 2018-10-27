@@ -89,6 +89,19 @@
                         </div>
 
                         <hr />
+
+                        <div class=row>
+                            <div class=col-7>
+                                This will export all the modifiers. <br />
+
+                                <textarea id="exportedModifiers" class="form-control" rows=5></textarea>
+                                <br />
+
+                                <button id="exportModifiers" type="button" class="btn btn-primary">Export modifiers</button>
+                            </div>
+                        </div>
+
+                        <hr />
                     </div>
                 </div>
             </div>
@@ -157,6 +170,16 @@
             // When the cache has been cleared
             ipcRenderer.on('removedApiKey', (event, arg) => {
                 $('#removeApiKeyMessage').removeClass('no-show');
+            });
+
+            $('#exportModifiers').on('click', function() {
+                // send a request to export the modifiers
+                ipcRenderer.send('exportModifiers', true);
+            });
+
+            // When the modifiers have been exported
+            ipcRenderer.on('exportedModifiers', (event, arg) => {
+                $('#exportedModifiers').html(JSON.stringify(arg, null, '\t'));
             });
         });
 

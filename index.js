@@ -448,6 +448,13 @@ ipcMain.on('deleteLobby', (event, arg) => {
     mainWindow.webContents.send('deletedLobby', true);
 });
 
+// ===========================================
+// This is called when exporting the modifiers
+ipcMain.on('exportModifiers', (event, arg) => {
+    // Send a response to the front end
+    mainWindow.webContents.send('exportedModifiers', store.get('cache.modifiers'));
+});
+
 // ==================================================
 // Prevent the app from crashing when an error occurs
 process.on("uncaughtException", err => {
