@@ -63,6 +63,18 @@ body {
 
         background-color: $sidebar-background-color;
 
+        .sb-old-version {
+            display: none;
+            width: 100%;
+            background-color: #991010;
+            
+            padding: 3px;
+
+            &.in {
+                display: block;
+            }
+        }
+
         .sb-header {
             margin-top:     7px;
             padding-top:    7px;
@@ -82,7 +94,6 @@ body {
                 border:             1px solid $sidebar-hr-color;
 
                 background-image: url("../images/axs.ico");
-
             }
 
             .sb-header-text {

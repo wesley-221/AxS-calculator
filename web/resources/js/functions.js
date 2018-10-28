@@ -61,3 +61,8 @@ function isValidBeatmapUrl(url) {
 $('body').on('click', '.apiError', function() {
     $(this).remove();
 });
+
+$('body').on('click', '.sb-old-version a', (e) => {
+    e.preventDefault();
+    require("electron").shell.openExternal(e.target.href);
+});

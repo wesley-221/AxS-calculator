@@ -5,6 +5,9 @@ const Store             = require('electron-store');
 const fnc               = require('./plugins/functions.js');
 const rp                = require('request-promise');
 
+const Bitbucket         = require('bitbucket');
+const bitbucket         = new Bitbucket();
+
 const store = new Store();
 
 // ============================
@@ -57,6 +60,33 @@ app.on('activate', () => {
     if (mainWindow === null) {
         initialize();
     }
+});
+
+// ======================================
+// This is called when accessing any page
+ipcMain.on('checkVersion', (event, arg) => {
+    // =====================================================================
+    // Check if the version is the latest version, if not send out a warning
+    bitbucket.repositories.getSrc({
+        'username': 'wesley221',
+        'repo_slug': 'axs-calculator',
+        'node': 'master',
+        'path': 'package.json'
+    }).then(({data, headers}) => {
+        data = JSON.parse(data);
+
+        const   remoteVersion = data.version,
+                currentVersion = process.env.npm_package_version;
+        
+        // ==================
+        // The version is old
+        if(currentVersion < remoteVersion) {
+            mainWindow.webContents.send('oldVersion', {
+                'currentVersion': currentVersion,
+                'newestVersion': remoteVersion
+            });
+        }
+    });
 });
 
 ipcMain.on('saveAPIKey', (event, apiKey) => {

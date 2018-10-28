@@ -15,6 +15,13 @@
     <body>
         <div class=container>
             <div class=sideBar>
+                <div class=sb-old-version>
+                    There is a newer version of the AxS calculator. <br /><br />
+                    <b>Current version:</b> <span id=cur-version>1.0.0</span> <br />
+                    <b>Latest version:</b> <span id=latest-version>1.0.0</span> <br />
+                    <a href="https://bitbucket.org/wesley221/axs-calculator/downloads/" class="btn btn-primary">Download newest version</a>
+                </div>
+                
                 <div class=sb-header>
                     <div class=sb-header-img></div>
             
@@ -201,6 +208,19 @@
 
                 // Request to get new multiplayerdata
                 ipcRenderer.send('retrieveMultiplayerData', lobbyId);
+            });
+
+            // =====================================
+            // Send out to check the current version
+            ipcRenderer.send('checkVersion', true);
+
+            // ==============================================
+            // Check if the application is the latest version
+            ipcRenderer.on('oldVersion', (event, arg) => {
+                $('#cur-version').html(arg.currentVersion);
+                $('#latest-version').html(arg.latestVersion);
+
+                $('.sb-old-version').addClass('in');
             });
         });
 
