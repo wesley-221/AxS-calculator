@@ -75,15 +75,15 @@ ipcMain.on('checkVersion', (event, arg) => {
     }).then(({data, headers}) => {
         data = JSON.parse(data);
 
-        const   remoteVersion = data.version,
-                currentVersion = process.env.npm_package_version;
+        const   currentVersion = app.getVersion()
+                remoteVersion = data.version;        
         
         // ==================
         // The version is old
         if(currentVersion < remoteVersion) {
             mainWindow.webContents.send('oldVersion', {
                 'currentVersion': currentVersion,
-                'newestVersion': remoteVersion
+                'latestVersion': remoteVersion
             });
         }
     });
