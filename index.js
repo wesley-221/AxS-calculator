@@ -1,9 +1,10 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 const path              = require('path');
 const url               = require('url');
 const Store             = require('electron-store');
 const fnc               = require('./plugins/functions.js');
 const rp                = require('request-promise');
+const fs                = require('fs');
 
 const Bitbucket         = require('bitbucket');
 const bitbucket         = new Bitbucket();
@@ -440,13 +441,38 @@ ipcMain.on('createBeatmapModifier', async (event, arg) => {
 // =============================================
 // This is called when exporting the config file
 ipcMain.on('exportConfigFile', (event, arg) => {
-    let configFile = store.store;
+    // ===================
+    // Show a save window
+    dialog.showSaveDialog({
+        'title': 'Export the config file',
+        'defaultPath': 'export.json'
+    }, async fileLocation => {
+        // =====================================
+        // Check if a location has been selected
+        if(fileLocation != null) {
+            let configFile = store.store;
 
-    // Remove the api key from the content
-    configFile['api-key'] = {"key": "redacted", "valid": true};
+            // Remove the api key from the content
+            configFile['api-key'] = {"key": "redacted", "valid": true};
 
-    // Send the config file to the front end
-    mainWindow.webContents.send('exportedConfigFile', configFile);
+            // ========================================
+            // Create the file at the selected location
+            fs.writeFile(fileLocation, JSON.stringify(configFile, null, '\t'), err => {
+                // Check if there was an error
+                if(err) {
+                    mainWindow.webContents.send('exportedConfigFile', {
+                        'error': `We encountered an error while trying to save the file: ${err.message}`
+                    });
+                }
+                // There was no error, send confirmation
+                else {
+                    mainWindow.webContents.send('exportedConfigFile', {
+                        'success': `Succesfully saved the file to "${fileLocation}".`
+                    });
+                }
+            });
+        }
+    });
 });
 
 // =================================================
@@ -481,8 +507,35 @@ ipcMain.on('deleteLobby', (event, arg) => {
 // ===========================================
 // This is called when exporting the modifiers
 ipcMain.on('exportModifiers', (event, arg) => {
-    // Send a response to the front end
-    mainWindow.webContents.send('exportedModifiers', store.get('cache.modifiers'));
+    // ===================
+    // Show a save window
+    dialog.showSaveDialog({
+        'title': 'Export the modifiers',
+        'defaultPath': 'modifiers.json'
+    }, async fileLocation => {
+        // =====================================
+        // Check if a location has been selected
+        if(fileLocation != null) {
+            const allModifiers = store.get('cache.modifiers');
+
+            // ========================================
+            // Create the file at the selected location
+            fs.writeFile(fileLocation, JSON.stringify(allModifiers, null, '\t'), err => {
+                // Check if there was an error
+                if(err) {
+                    mainWindow.webContents.send('exportedModifiers', {
+                        'error': `We encountered an error while trying to save the file: ${err.message}`
+                    });
+                }
+                // There was no error, send confirmation
+                else {
+                    mainWindow.webContents.send('exportedModifiers', {
+                        'success': `Succesfully saved the file to "${fileLocation}".`
+                    });
+                }
+            });
+        }
+    });
 });
 
 // =======================================

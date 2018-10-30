@@ -64,8 +64,7 @@
                                 This will export the config file and save it as a file in case you need to share it with someone. <br />
                                 <b>Note:</b> It will not export the API key in the file <br />
 
-                                <textarea id="exportedConfigFile" class="form-control" rows="5"></textarea>
-                                <br />
+                                <div id="exportConfigFileMessage" class="alert no-show"></div>
 
                                 <button id="exportConfigFile" type="button" class="btn btn-primary">Export config file</button>
                             </div>
@@ -101,8 +100,7 @@
                             <div class=col-7>
                                 This will export all the modifiers. <br />
 
-                                <textarea id="exportedModifiers" class="form-control" rows=5></textarea>
-                                <br />
+                                <div id="exportModifiersMessage" class="alert no-show"></div>
 
                                 <button id="exportModifiers" type="button" class="btn btn-primary">Export modifiers</button>
                             </div>
@@ -156,7 +154,18 @@
             });
 
             ipcRenderer.on('exportedConfigFile', (event, arg) => {
-                $('#exportedConfigFile').html(JSON.stringify(arg, null, '\t'));
+                if(arg.hasOwnProperty('success')) {
+                    $('#exportConfigFileMessage').html(arg.success);
+                    $('#exportConfigFileMessage').addClass('alert-success');
+                    $('#exportConfigFileMessage').removeClass('alert-danger');
+                    $('#exportConfigFileMessage').removeClass('no-show');
+                }
+                else {
+                    $('#exportConfigFileMessage').html(arg.error);
+                    $('#exportConfigFileMessage').addClass('alert-danger');
+                    $('#exportConfigFileMessage').removeClass('alert-success');
+                    $('#exportConfigFileMessage').removeClass('no-show');
+                }
             });
 
             $('#clearCache').on('click', function() {
@@ -186,7 +195,18 @@
 
             // When the modifiers have been exported
             ipcRenderer.on('exportedModifiers', (event, arg) => {
-                $('#exportedModifiers').html(JSON.stringify(arg, null, '\t'));
+                if(arg.hasOwnProperty('success')) {
+                    $('#exportModifiersMessage').html(arg.success);
+                    $('#exportModifiersMessage').addClass('alert-success');
+                    $('#exportModifiersMessage').removeClass('alert-danger');
+                    $('#exportModifiersMessage').removeClass('no-show');
+                }
+                else {
+                    $('#exportModifiersMessage').html(arg.error);
+                    $('#exportModifiersMessage').addClass('alert-danger');
+                    $('#exportModifiersMessage').removeClass('alert-success');
+                    $('#exportModifiersMessage').removeClass('no-show');
+                }
             });
 
             // =====================================
