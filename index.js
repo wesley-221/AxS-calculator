@@ -446,7 +446,7 @@ ipcMain.on('exportConfigFile', (event, arg) => {
     dialog.showSaveDialog({
         'title': 'Export the config file',
         'defaultPath': 'export.json'
-    }, async fileLocation => {
+    }, fileLocation => {
         // =====================================
         // Check if a location has been selected
         if(fileLocation != null) {
@@ -512,7 +512,7 @@ ipcMain.on('exportModifiers', (event, arg) => {
     dialog.showSaveDialog({
         'title': 'Export the modifiers',
         'defaultPath': 'modifiers.json'
-    }, async fileLocation => {
+    }, fileLocation => {
         // =====================================
         // Check if a location has been selected
         if(fileLocation != null) {
@@ -545,6 +545,67 @@ ipcMain.on('deleteModifier', (event, arg) => {
 
     // Send a response to the front end
     mainWindow.webContents.send('deletedModifier', arg);
+});
+
+// =======================================
+// This is called when importing modifiers
+ipcMain.on('importModifiers', (event, arg) => {
+    // =======================
+    // Show a file open window
+    dialog.showOpenDialog({
+        'title': 'Import modifiers',
+        'defaultPath': 'modifiers.json',
+        'filters': [
+            {name: 'json', extensions: ['json']}
+        ]
+    }, fileLocation => {
+        // =====================================
+        // Check if a location has been selected
+        if(fileLocation != undefined) {
+            fileLocation = fileLocation[0];
+
+            // ======================
+            // Read the selected file
+            fs.readFile(fileLocation, 'utf-8', (err, data) => {
+                // ================
+                // Check for errors
+                if(err) {
+                    dialog.showErrorBox('Error!', `There was an error trying to import the file: ${err.message}.`);
+                }
+                else {
+                    data = JSON.parse(data);
+
+                    // Loop through the beatmaps
+                    for(let beatmap in data) {
+                        // Check for errors
+                        if(isNaN(beatmap)) {
+                            dialog.showErrorBox('Error!', `The format of the imported file is correct.`);
+                            return;
+                        }
+
+                        // Check for errors
+                        if(!data[beatmap].hasOwnProperty('beatmap_name') || !data[beatmap].hasOwnProperty('beatmap_id') || !data[beatmap].hasOwnProperty('modifier')) {
+                            dialog.showErrorBox('Error!', `The format of the imported file is correct.`);
+                            return;
+                        }
+
+                        // Save the modifier
+                        store.set(`cache.modifiers.${beatmap}`, data[beatmap]);
+                    }
+
+                    // ================
+                    // Show message box
+                    dialog.showMessageBox({
+                        'type': 'info',
+                        'message': 'Successfully imported the modifiers.'
+                    });
+
+                    // Send message when modifiers have been imported
+                    mainWindow.webContents.send('modifiersImported', true);
+                }
+            });
+        }
+    });
 });
 
 // ==================================================

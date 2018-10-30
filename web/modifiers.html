@@ -74,7 +74,10 @@
                         <th>Beatmap name</th>
                         <th>Beatmap link</th>
                         <th>Modifier</th>
-                        <th><button type=button class="btn btn-primary" id=createNewModifier>Create new modifier</button></th>
+                        <th>
+                            <button type=button class="btn btn-primary btn-sm" id=createNewModifier title="Create a new modifier"><i class="fas fa-plus"></i></button>
+                            <button type=button class="btn btn-primary btn-sm" id=importModifiers title="Import modifiers"><i class="fas fa-file-import"></i></button>
+                        </th>
                     </thead>
 
                     <tbody id=allModifiers></tbody>
@@ -167,6 +170,18 @@
                 $('#latest-version').html(arg.latestVersion);
 
                 $('.sb-old-version').addClass('in');
+            });
+
+            $('#importModifiers').on('click', function() {
+                // ======================================
+                // Send out a request to import modifiers
+                ipcRenderer.send('importModifiers', true);
+            });
+
+            // ==============================================
+            // Modifiers have been imported, refresh the page
+            ipcRenderer.on('modifiersImported', (event, arg) => {
+                window.location.reload();
             });
         });
 
