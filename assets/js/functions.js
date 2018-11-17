@@ -1,3 +1,5 @@
+const settings = require('electron-settings');
+
 document.body.addEventListener('click', event => {
     if(event.target.dataset.section) {
         handleSectionTrigger(event);
@@ -13,6 +15,9 @@ function handleSectionTrigger (event) {
     // Display the current section
     const sectionId = `${event.target.dataset.section}-section`;
     $(`#${sectionId}`).addClass('in');
+
+    // Save the last selected window so we can go there on next reboot
+    settings.set('activeSectionButtonId', event.target.id);
 }
 
 function hideAllSectionsAndDeselectButtons () {
@@ -108,3 +113,14 @@ $('body').on('click', '.sb-old-version a', (e) => {
     e.preventDefault();
     require("electron").shell.openExternal(e.target.href);
 });
+
+const currentSectionId = settings.get('activeSectionButtonId');
+
+if(currentSectionId) {
+    // Go to the last visited page
+    $(`#${currentSectionId}`).click();
+}
+else {
+    // Default to the information page
+    $('#information-btn').click();
+}
