@@ -1,0 +1,45 @@
+<template class="task-template">
+    <section id="modifiers-section" class="section">
+        <h1>Modifiers</h1>
+        <p>
+            Here you can set the modifiers per map. The modifier is used in the score calculation. <br />
+            Make sure that the link you are entering is from the <span class=green-text>beatmap_id</span>, and not the <span class=red-text>beatmapset_id</span> when using links from the old website. Links from the new osu! website works as well.<br />
+            
+            <table>
+                <tr>
+                    <td>Beatmap_id:</td>
+                    <td>&emsp;</td>
+                    <td><span class=green-text>https://osu.ppy.sh/b/1179823?m=2</span></td>
+                </tr>
+
+                <tr>
+                    <td>Beatmapset_id:</td>
+                    <td>&emsp;</td>
+                    <td><span class=red-text>https://osu.ppy.sh/s/515878</span></td>
+                </tr>
+
+                <tr>
+                    <td>New website:</td>
+                    <td>&emsp;</td>
+                    <td><span class=green-text>https://osu.ppy.sh/beatmapsets/515878#fruits/1179823</span></td>
+                </tr>
+            </table>
+            
+            <br /><b>NOTE:</b> If there is no modifier entered for the specific <span class=green-text>beatmap_id</span>, the modifier will be set to 0.
+        </p>
+
+        <table class="table table-dark table-striped">
+            <thead>
+                <th>Beatmap name</th>
+                <th>Beatmap link</th>
+                <th>Modifier</th>
+                <th>
+                    <button type=button class="btn btn-primary btn-sm" id=createNewModifier title="Create a new modifier"><i class="fas fa-plus"></i></button>
+                    <button type=button class="btn btn-primary btn-sm" id=importModifiers title="Import modifiers"><i class="fas fa-file-import"></i></button>
+                </th>
+            </thead>
+
+            <tbody id=allModifiers></tbody>
+        </table>
+    </section>
+</template>

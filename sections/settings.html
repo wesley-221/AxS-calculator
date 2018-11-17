@@ -1,0 +1,72 @@
+<template class="task-template">
+    <section id="settings-section" class="section">
+        <div class=row>
+            <div class=col-12>
+                <div class=form-group>
+                    <h2>API key</h2>
+                    <p>Enter your osu!API key so the application is able to grab all relevant information (multiplayer, beatmap, user information). <br />The API key can be found <a href="https://osu.ppy.sh/p/api">here</a>.</p>
+                    <input id=apiKey type=password class=form-control placeholder="osu!API key" />
+                </div>
+
+                <div id=message></div>
+
+                <button id=saveButton type="button" class="btn btn-primary float-right">Save</button>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class=row>
+            <div class=col-12>
+                <div class=row>
+                    <div class=col-7>
+                        This will export the config file and save it as a file in case you need to share it with someone. <br />
+                        <b>Note:</b> It will not export the API key in the file <br />
+
+                        <div id="exportConfigFileMessage" class="alert no-show"></div>
+
+                        <button id="exportConfigFile" type="button" class="btn btn-primary">Export config file</button>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class=row>
+                    <div class=col-7>
+                        This will clear all the cache. <br />
+
+                        <div id="clearCacheMessage" class="alert alert-success no-show">Succesfully cleared the cache.</div>
+
+                        <button id="clearCache" type="button" class="btn btn-primary">Clear cache</button>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class=row>
+                    <div class=col-7>
+                        This will remove the API key. <br />
+
+                        <div id="removeApiKeyMessage" class="alert alert-success no-show">Succesfully removed the API key.</div>
+
+                        <button id="removeApiKey" type="button" class="btn btn-primary">Remove API key</button>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class=row>
+                    <div class=col-7>
+                        This will export all the modifiers. <br />
+
+                        <div id="exportModifiersMessage" class="alert no-show"></div>
+
+                        <button id="exportModifiers" type="button" class="btn btn-primary">Export modifiers</button>
+                    </div>
+                </div>
+
+                <hr />
+            </div>
+        </div>
+    </section>
+</template>

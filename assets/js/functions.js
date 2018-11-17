@@ -1,3 +1,45 @@
+document.body.addEventListener('click', event => {
+    if(event.target.dataset.section) {
+        handleSectionTrigger(event);
+    }
+});
+
+function handleSectionTrigger (event) {
+    hideAllSectionsAndDeselectButtons();
+  
+    // Highlight clicked button and show view
+    event.target.classList.add('in');
+  
+    // Display the current section
+    const sectionId = `${event.target.dataset.section}-section`;
+    $(`#${sectionId}`).addClass('in');
+}
+
+function hideAllSectionsAndDeselectButtons () {
+    const sections = $(`.sb-nav-column.in`);
+    
+    Array.prototype.forEach.call(sections, section => {
+        section.classList.remove('in');
+    });
+
+    const allSections = $(`.section`);
+
+    Array.prototype.forEach.call(allSections, section => {
+        section.classList.remove('in');
+    });
+}
+
+const links = document.querySelectorAll('link[rel="import"]')
+
+// Import and add each page to the DOM
+Array.prototype.forEach.call(links, link => {
+    let template = link.import.querySelector('.task-template');
+    let clone = document.importNode(template.content, true);
+
+    document.querySelector('.mainContent').appendChild(clone);
+})
+
+
 function getUrlParamters() {
     let vars = {};
 

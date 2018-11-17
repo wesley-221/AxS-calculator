@@ -126,8 +126,11 @@ body {
 
             .sb-nav-column {
                 display:            block;
+                text-align:         left;
             
                 color:              $sidebar-color;
+                background:         none;
+                border:             0;
                 border-left:        3px solid $sidebar-background-color;
 
                 margin-bottom:      1px;
@@ -135,6 +138,8 @@ body {
                 padding-right:      5px;
                 padding-top:        3px;
                 padding-bottom:     3px;
+
+                width:              100%;
 
                 text-decoration:    none;
                 transition:         all 0.1s ease-out;
@@ -147,6 +152,12 @@ body {
                 &:hover {
                     color:          $sidebar-color-hover;
                     border-left:    3px solid $sidebar-color-hover;
+
+                    cursor:         pointer;
+                }
+
+                &:active, &:focus {
+                    outline: 0;
                 }
             }
 
@@ -196,7 +207,32 @@ body {
     }
 
     .mainContent {
-        padding-left: $sidebar-width;
+        section {
+            z-index: 100;
+
+            position:   fixed;
+            width:      calc(100% - 48px);
+
+            padding-left: $sidebar-width;
+
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing:    border-box;
+            box-sizing:         border-box;
+
+            pointer-events: none;
+            visibility:     hidden; 
+            opacity:        0;
+            transform:      translateX(-20px);
+            transition:     visibility 0s .12s linear , opacity .12s ease-in, transform .12s ease-in;
+
+            &.in {
+                visibility:     visible;
+                pointer-events: initial;
+                opacity:        1;
+                transform:      translateX(0);
+                transition:     visibility 0s .12s linear , opacity .36s ease-out, transform .36s ease-out;
+            }
+        }
 
         .teamWin {
             color: green;

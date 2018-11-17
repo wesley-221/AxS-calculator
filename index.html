@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset=utf-8>
+        <meta name="robots" content="noindex, nofollow">
+
+        <title>Home | AxS</title>
+
+        <link rel="shortcut icon" href="./assets/images/axs.ico" type="image/x-icon" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+        <link href="./assets/css/style.css" rel="stylesheet" />
+
+        <link rel="import" href="sections/information.html" />
+        <link rel="import" href="sections/createlobby.html" />
+        <link rel="import" href="sections/lobbyoverview.html" />
+        <link rel="import" href="sections/lobbyview.html" />
+        <link rel="import" href="sections/modifiers.html" />
+        <link rel="import" href="sections/settings.html" />
+    </head>
+
+    <body>
+        <div class=container>
+            <div class=sideBar>
+                <div class=sb-old-version>
+                    There is a newer version of the AxS calculator. <br /><br />
+                    <b>Current version:</b> <span id=cur-version>1.0.0</span> <br />
+                    <b>Latest version:</b> <span id=latest-version>1.0.0</span> <br />
+                    <a href="https://bitbucket.org/wesley221/axs-calculator/downloads/" class="btn btn-primary">Download newest version</a>
+                </div>
+
+                <div class=sb-header>
+                    <div class=sb-header-img></div>
+            
+                    <div class=sb-header-text>
+                        AxS calculator
+                        <hr />
+                        <button type="button" class="btn btn-sb-menu btn-xs" data-section="settings" title="Settings"><i class="fas fa-cogs" data-section="settings"></i></button>
+                    </div>
+                </div>
+            
+                <div class=sb-navigation>
+                    <button type="button" class="sb-nav-column" data-section="information"><i class="fas fa-info" data-section="information"></i> Information</button>
+                    <button type="button" class="sb-nav-column" data-section="lobby-overview"><i class="fas fa-bars" data-section="lobby-overview"></i> Lobby overview</button>
+                    <button type="button" class="sb-nav-column" data-section="create-lobby"><i class="far fa-plus-square" data-section="create-lobby"></i> Create a lobby</button>
+                    <button type="button" class="sb-nav-column" data-section="modifiers"><i class="far fa-times-circle" data-section="modifiers"></i> Modifiers</button>
+                </div>
+            </div>
+
+            <div class=mainContent></div>
+        </div>
+    </body>
+
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="./assets/js/jquery-3.3.1.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/functions.js"></script>
+    <script>if (window.module) module = window.module;</script>
+</html>
