@@ -29,6 +29,11 @@ initialize = async () => {
     if(apiKey == undefined)
         await store.set('api-key', {"key": "", "valid": false});
 
+    const lobbyExists = store.get('lobby');
+
+    if(lobbyExists == undefined) 
+        await store.set('lobby', {});
+
     const shouldQuit = makeSingleInstance();
     if(shouldQuit) return app.quit();
 
