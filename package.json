@@ -1,7 +1,7 @@
 {
   "name": "axs-scorecalculator",
   "productName": "AxSCalculator",
-  "version": "1.1.0",
+  "version": "1.1.5",
   "description": "A calculator to calculate the score with the AxS score format",
   "main": "index.js",
   "scripts": {
