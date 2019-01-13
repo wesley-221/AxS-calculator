@@ -1,7 +1,11 @@
 <template class="task-template">
-    <section id="lobby-view-section" class="section">
+    <section id="lobby-view-section" class="section is-loading">
         <div class=matchHeader></div>
 
         <div class=allMaps></div>
+
+        <script>
+            require('./renderer-process/lobbyview.js');
+        </script>
     </section>
 </template>
