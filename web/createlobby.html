@@ -43,8 +43,8 @@
             <div class=mainContent>
                 <div class=form-group>
                     <h2>Match description</h2>
-                    <p>This will only be a description about the match so you can distinguish them from other matches.</p>
-                    <input id=matchDescription type=text class=form-control placeholder="Match description" />
+                    <p>This will only be a description about the match so you can distinguish them from other matches. Will be updated when you enter the names of the teams.</p>
+                    <input id=matchDescription type=text class=form-control placeholder="Match description" disabled />
                 </div>
 
                 <hr />
@@ -150,6 +150,10 @@
                 $('#latest-version').html(arg.latestVersion);
 
                 $('.sb-old-version').addClass('in');
+            });
+
+            $("#teamOneName, #teamTwoName").on('keydown focus input', function() {
+                $('#matchDescription').val(`${$('#teamOneName').val()} vs. ${$('#teamTwoName').val()}`);
             });
         });
     </script>
