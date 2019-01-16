@@ -36,6 +36,7 @@ $(() => {
         for(const lobbyId in arg) {
             const currentLobby = arg[lobbyId].data;
 
+            // data-section="lobby-view" >>> Add this to EVERY element in the div except for the delete button
             $('.allLobbies').append(`<div id="${lobbyId}" class=multiplayerLobby data-section="lobby-view" data-lobbyid="${lobbyId}">
                                         <div class="body" data-section="lobby-view">
                                             <div class="row" data-section="lobby-view">
@@ -45,7 +46,7 @@ $(() => {
                                                 </div>
 
                                                 <div class="col-1" data-section="lobby-view">
-                                                    <div class="multiplayerClose" data-section="lobby-view">
+                                                    <div class="multiplayerClose">
                                                         <button id="delete_${lobbyId}" type=button class="btn btn-danger">Delete</button>
                                                     </div>
                                                 </div>
@@ -71,7 +72,8 @@ $(() => {
             }
         }
         else {
-            settings.set('lobbyId', $(this).data('lobbyid'));
+            // Request the lobby 
+            ipcRenderer.send('requestMultiplayerLobby', $(this).data('lobbyid'));
         }
     });
 

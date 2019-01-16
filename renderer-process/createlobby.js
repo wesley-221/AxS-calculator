@@ -26,11 +26,11 @@ $(() => {
     // This will be called when the match has been created
     ipcRenderer.on('matchHasBeenCreated', function(event, arg) {
         $('#createLobbyAlert').css('display', 'block');
-        $('#lobbyText').html(`The match has been succesfully created. <a href="./lobbyview.html?id=${arg}">Click here to go to the lobby</a>.`);
+        $('#lobbyText').html(`The match has been succesfully created. <a href="#" data-section="lobby-view">Click here to go to the lobby</a>.`);
         $('#createLobby').html('Create');
-
-        // Send a request to the server to retrieve all saved lobbies
-        ipcRenderer.send(`requestSavedLobbies`, true);
+        
+        // Get the data for the newly created lobby
+        ipcRenderer.send('requestMultiplayerLobby', arg);
     });
 
     // =====================================

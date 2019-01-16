@@ -12,13 +12,6 @@ $(() => {
         }
     });
 
-    if($('#lobby-view-section').hasClass('is-loading')) {
-        ipcRenderer.send('requestMultiplayerLobby', settings.get('lobbyId'));
-        $('#lobby-view-section').removeClass('is-loading');
-
-        console.log('is loading');
-    }
-
     // =================================================
     // This will be called after requestMultiplayerLobby
     ipcRenderer.on('requestedLobby', (event, arg) => {
@@ -36,6 +29,10 @@ $(() => {
                 teamTwoScore ++;
             }
         }
+
+        // Reset the elements
+        $('.matchHeader').html('');
+        $('.allMaps').html('');
 
         $('.matchHeader').append(`<h2>${arg.lobby.data.description}</h2>
                                     Multiplayer link: <a href="${arg.lobby.data.multiplayerLink}">${arg.lobby.data.multiplayerLink}</a><br />
@@ -143,10 +140,6 @@ $(() => {
                                     </div>
                                 </div>`);
         }
-    });
-
-    ipcRenderer.on('refreshPage', (event, arg) => {
-        window.location.reload();
     });
 
     $('.matchHeader').on('click', '#getMultiplayerData', function() {

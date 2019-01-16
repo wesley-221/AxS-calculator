@@ -170,8 +170,6 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
                 store.set(`lobby.${lobbyId}.multiplayerData.${game}.team_one_score`, finalTeamOneScore);
                 store.set(`lobby.${lobbyId}.multiplayerData.${game}.team_two_score`, finalTeamTwoScore);
             }
-
-            event.sender.send('refreshPage', true);
         });
     }
 });

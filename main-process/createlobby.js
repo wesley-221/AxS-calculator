@@ -19,6 +19,7 @@ ipcMain.on('requestApiValidation', (event, arg) => {
 
 // ===========================================
 // This will be called when you create a lobby
+// TODO: Make it so that this doesn't freeze the render process
 ipcMain.on('createLobby', (event, arg) => {
     const lobbyToken = fnc.createToken(10);
 
@@ -106,7 +107,7 @@ ipcMain.on('createLobby', (event, arg) => {
                 });
             }
         }
-    }).finally(() => {
+    }).finally(async () => {
         const multiplayerGames = store.get(`lobby.${lobbyToken}.multiplayerData`);
 
         // Loop through the games
@@ -139,11 +140,11 @@ ipcMain.on('createLobby', (event, arg) => {
             store.set(`lobby.${lobbyToken}.multiplayerData.${game}.team_one_score`, finalTeamOneScore);
             store.set(`lobby.${lobbyToken}.multiplayerData.${game}.team_two_score`, finalTeamTwoScore);
         }
-    });
 
-    // ==========================================================
-    // Send a message to frontend that the match has been created
-    event.sender.send(`matchHasBeenCreated`, lobbyToken);
+        // ==========================================================
+        // Send a message to frontend that the match has been created
+        await event.sender.send(`matchHasBeenCreated`, lobbyToken);
+    });
 });
 
 // ======================================
