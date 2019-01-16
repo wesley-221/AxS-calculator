@@ -1,48 +1,40 @@
 <template class="task-template">
     <section id="create-lobby-section" class="section">
-        <div class=row>
-            <div class=col-12>
-                <div class=form-group>
-                    <h2>Match description</h2>
-                    <p>This will only be a description about the match so you can distinguish them from other matches.</p>
-                    <input id=matchDescription type=text class=form-control placeholder="Match description" />
-                </div>
-        
-                <hr />
-                
-                <div class=form-group>
-                    <h2>Multiplayer link</h2>
-                    <p>
-                        Enter a multiplayer link in here for the match you want to calculate the scores off. <br /><br />
-                        Accepted URL's: <br />
-                        <ul>
-                            <li>https://osu.ppy.sh/community/matches/46358686</li>
-                        </ul>
-                    </p>
-                    <input id=multiplayerLink type=text class=form-control placeholder="Multiplayer link" />
-                </div>
-            </div>
+        <div class=form-group>
+            <h2>Match description</h2>
+            <p>This will only be a description about the match so you can distinguish them from other matches.</p>
+            <input id=matchDescription type=text class=form-control placeholder="Match description" />
         </div>
 
-        <div class=row>
-            <div class=col-6>
-                <div class=form-group>
-                    <h2>Team one name</h2>
-                    <p>
-                        Enter the name of the first team. This will be team <span class=red-text>red</span> and has slot 1, 2 and 3.
-                    </p>
-                    <input id=teamOneName type=text class=form-control placeholder="Team one name" />
-                </div>
+        <hr />
+        
+        <div class=form-group>
+            <h2>Multiplayer link</h2>
+            <p>
+                Enter a multiplayer link in here for the match you want to calculate the scores off. <br /><br />
+                Accepted URL's: <br />
+                <ul>
+                    <li>https://osu.ppy.sh/community/matches/46358686</li>
+                </ul>
+            </p>
+            <input id=multiplayerLink type=text class=form-control placeholder="Multiplayer link" />
+        </div>
+
+        <div class=createLobbyTeamRow>
+            <div class="teamOne form-group">
+                <h2>Team one name</h2>
+                <p>
+                    Enter the name of the first team. This will be team <span class=red-text>red</span> and has slot 1, 2 and 3.
+                </p>
+                <input id=teamOneName type=text class=form-control placeholder="Team one name" />
             </div>
 
-            <div class=col-6>
-                <div class=form-group>
-                    <h2>Team two name</h2>
-                    <p>
-                        Enter the name of the second team. This will be team <span class=blue-text>red</span> and has slot 4, 5 and 6.
-                    </p>
-                    <input id=teamTwoName type=text class=form-control placeholder="Team two name" />
-                </div>
+            <div class="teamTwo form-group">
+                <h2>Team two name</h2>
+                <p>
+                    Enter the name of the second team. This will be team <span class=blue-text>red</span> and has slot 4, 5 and 6.
+                </p>
+                <input id=teamTwoName type=text class=form-control placeholder="Team two name" />
             </div>
         </div>
         
@@ -50,14 +42,10 @@
 
         <button type=button id=createLobby class="btn btn-primary float-right">Create</button>
 
-        <div class=row>
-            <div class=col>
-                <div id=createLobbyAlert class="alert alert-success" style="display: none;">
-                    <h2><i class="fas fa-check"></i> Success!</h2>
+        <div id=createLobbyAlert class="alert alert-success" style="display: none;">
+            <h2><i class="fas fa-check"></i> Success!</h2>
 
-                    <p id=lobbyText></p>
-                </div>
-            </div>
+            <p id=lobbyText></p>
         </div>
 
         <script>
