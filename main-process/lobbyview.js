@@ -102,7 +102,7 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
                     if(['0','3'].indexOf(currentScore.slot) > -1) {
                         gameScore.user = currentScore.user_id;
                         gameScore.score = (currentScore.pass == 0 ? 0 : fnc.calculateAccuracyPlayerScore(currentScore.score));
-                        gameScore.accuracy = (currentScore.pass == 0 ? 0 : fnc.getAccuracyOfScore(currentScore));
+                        gameScore.accuracy = fnc.getAccuracyOfScore(currentScore);
                         gameScore.passed = currentScore.pass;
 
                         store.set(`lobby.${lobbyId}.multiplayerData.${currentGame.game_id}.${currentScore.slot}`, gameScore);
