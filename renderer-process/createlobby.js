@@ -45,4 +45,8 @@ $(() => {
 
         $('.sb-old-version').addClass('in');
     });
+
+    $("#teamOneName, #teamTwoName").on('keydown focus input', function() {
+        $('#matchDescription').val(`${$('#teamOneName').val()} vs. ${$('#teamTwoName').val()}`);
+    });
 });
