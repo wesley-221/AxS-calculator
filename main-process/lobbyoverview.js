@@ -54,5 +54,5 @@ ipcMain.on('deleteLobby', (event, arg) => {
     store.delete(`lobby.${arg}`);
 
     // Send a response to the front end
-    event.sender.send('deletedLobby', true);
+    event.sender.send('deletedLobby', arg);
 });

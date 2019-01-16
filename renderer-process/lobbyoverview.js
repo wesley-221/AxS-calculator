@@ -30,11 +30,13 @@ $(() => {
     
     // This will be called after the requestSavedLobbies call, it contains all the saved lobbies
     ipcRenderer.on('requestedLobbies', (event, arg) => {
+        $('.allLobbies').html('');
+
         // Loop through the lobbies
         for(const lobbyId in arg) {
             const currentLobby = arg[lobbyId].data;
 
-            $('.allLobbies').append(`<div class=multiplayerLobby data-section="lobby-view" data-lobbyid="${lobbyId}">
+            $('.allLobbies').append(`<div id="${lobbyId}" class=multiplayerLobby data-section="lobby-view" data-lobbyid="${lobbyId}">
                                         <div class="body" data-section="lobby-view">
                                             <div class="row" data-section="lobby-view">
                                                 <div class="col-11" data-section="lobby-view">
@@ -55,7 +57,7 @@ $(() => {
 
     // When a lobby is deleted
     ipcRenderer.on('deletedLobby', (event, arg) => {
-        window.location.reload();
+        $(`#${arg}`).remove();
     });
 
     // When you click on a multiplayer lobby block

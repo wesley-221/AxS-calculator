@@ -28,6 +28,9 @@ $(() => {
         $('#createLobbyAlert').css('display', 'block');
         $('#lobbyText').html(`The match has been succesfully created. <a href="./lobbyview.html?id=${arg}">Click here to go to the lobby</a>.`);
         $('#createLobby').html('Create');
+
+        // Send a request to the server to retrieve all saved lobbies
+        ipcRenderer.send(`requestSavedLobbies`, true);
     });
 
     // =====================================
