@@ -394,6 +394,8 @@ body {
         }
 
         .createLobbyTeamRow {
+            overflow: hidden; 
+
             .teamOne {
                 width: 50%;
                 float: left;
