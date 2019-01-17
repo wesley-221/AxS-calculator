@@ -33,6 +33,17 @@ $(() => {
         ipcRenderer.send('requestMultiplayerLobby', arg);
     });
 
+    $('#createLobbyAlert').on('click', '#lobbyText a', (event) => {
+        // Reset the text fields
+        $('#matchDescription').val('');
+        $('#multiplayerLink').val('');
+        $('#teamOneName').val('');
+        $('#teamTwoName').val('');
+
+        // Remove the alert
+        $('#createLobbyAlert').css('display', 'none');
+    });
+
     // =====================================
     // Send out to check the current version
     ipcRenderer.send('checkVersion', true);
