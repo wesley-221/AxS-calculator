@@ -38,7 +38,7 @@ $(() => {
                                     Multiplayer link: <a href="${arg.lobby.data.multiplayerLink}">${arg.lobby.data.multiplayerLink}</a><br />
 
                                     <span id="scoreString"><span class=red-text>Team ${arg.lobby.data.teamOneName}</span> score : <span class=${(teamOneScore > teamTwoScore) ? 'teamWin' : 'teamLoss'}>${teamOneScore}</span> | <span class=${(teamOneScore > teamTwoScore) ? 'teamLoss' : 'teamWin'}>${teamTwoScore}</span> : score <span class=blue-text>Team ${arg.lobby.data.teamTwoName}</span></span>
-                                    <button id=getMultiplayerData type=button class="btn btn-info float-right">Retrieve multiplayer data</button>
+                                    <button id=getMultiplayerData type=button class="btn btn-info float-right" data-lobbyid="${arg.lobbyId}">Retrieve multiplayer data</button>
                                     <hr />`);
 
         for(let map in arg.maps) {
@@ -145,8 +145,10 @@ $(() => {
     $('.matchHeader').on('click', '#getMultiplayerData', function() {
         $('#getMultiplayerData').html('Retrieve multiplayer data <i class="fas fa-spinner fa-spin"></i>');
 
+        $('.matchHeader').append('<div id="scoresUpdatedAlert"></div>');
+
         // Request to get new multiplayerdata
-        ipcRenderer.send('retrieveMultiplayerData', lobbyId);
+        ipcRenderer.send('retrieveMultiplayerData', $(this).data('lobbyid'));
     });
 
     // =====================================
