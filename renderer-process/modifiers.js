@@ -82,12 +82,6 @@ $(() => {
         // Send out a request to import modifiers
         ipcRenderer.send('importModifiers', true);
     });
-
-    // ==============================================
-    // Modifiers have been imported, refresh the page
-    ipcRenderer.on('modifiersImported', (event, arg) => {
-        window.location.reload();
-    });
 });
 
 $('#allModifiers').on('click', '[id^=save_]', function() {

@@ -108,7 +108,7 @@ ipcMain.on('importModifiers', (event, arg) => {
                     });
 
                     // Send message when modifiers have been imported
-                    event.sender.send('modifiersImported', true);
+                    event.sender.send('requestedModifiers', store.get('cache.modifiers'));
                 }
             });
         }
