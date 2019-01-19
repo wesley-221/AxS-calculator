@@ -42,7 +42,8 @@ initialize = async () => {
     createWindow = () => {
         const windowOptions = {
             title: app.getName(),
-            icon: __dirname + '/assets/images/axs.ico'
+            icon: __dirname + '/assets/images/axs.ico',
+            frame: false            
         };
 
         // Check for OS
@@ -52,6 +53,8 @@ initialize = async () => {
 
         mainWindow = new BrowserWindow(windowOptions);
         mainWindow.loadURL(path.join('file://', __dirname, '/index.html'));
+
+        mainWindow.maximize();
 
         mainWindow.on('closed', () => {
             mainWindow = null;

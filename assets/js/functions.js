@@ -1,3 +1,4 @@
+const { remote } = require('electron');
 const settings = require('electron-settings');
 
 document.body.addEventListener('click', event => {
@@ -124,3 +125,29 @@ else {
     // Default to the information page
     $('#information-btn').click();
 }
+
+$('#minimize-btn').on('click', () => {
+    remote.getCurrentWindow().minimize();
+});
+
+$('#maximize-btn').on('click', () => {
+    if(remote.getCurrentWindow().isMaximized()) {
+        remote.getCurrentWindow().unmaximize();
+    }
+    else {
+        remote.getCurrentWindow().maximize();
+    }
+});
+
+$('#close-btn').on('click', () => {
+    remote.app.quit();
+});
+
+// Change the icon of the title bar
+remote.getCurrentWindow().on('maximize', () => {
+    $('#maximize-btn').html('<i class="far fa-clone"></i>');
+});
+
+remote.getCurrentWindow().on('unmaximize', () => {
+    $('#maximize-btn').html('<i class="far fa-square"></i>');
+});
