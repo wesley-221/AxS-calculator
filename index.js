@@ -48,7 +48,7 @@ initialize = async () => {
 
         // Check for OS
         if(process.platform === 'linux') {
-            windowOptions.icon = path.join(__dirname, '/assets/images/axs.ico'); // Change to PNG
+            windowOptions.icon = path.join(__dirname, '/assets/images/axs.png');
         }
 
         mainWindow = new BrowserWindow(windowOptions);
