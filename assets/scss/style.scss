@@ -81,7 +81,6 @@ html, body {
         -webkit-app-region: no-drag;
 
         .navButton {
-            display: inline-block;
             float: left;
 
             z-index: 10000;
@@ -125,6 +124,13 @@ html, body {
         overflow-y: auto;
 
         background-color: $sidebar-background-color;
+
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 
         .sb-old-version {
             display: none;
@@ -277,9 +283,6 @@ html, body {
             width:      calc(100% - 15px);
             height:     calc(100% - #{$navbar-height});
 
-            overflow-y: auto;
-            overflow-x: hidden;
-
             padding-left: $sidebar-width;
             padding-right: 16px;
 
@@ -302,6 +305,11 @@ html, body {
                 transform:      translateX(0);
                 transition:     visibility 0s .12s linear , opacity .36s ease-out, transform .36s ease-out;
             }
+
+            &.scroll {
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
         }
 
         .teamWin {
@@ -314,7 +322,6 @@ html, body {
 
         .matchHeader {
             position: fixed;
-            overflow: hidden;
 
             left: 0;
             padding-left: calc(#{$sidebar-width} + 14px);
@@ -332,7 +339,13 @@ html, body {
         }
 
         .allMaps {
-            padding-top: 134px;
+            height:     calc(100% - #{$navbar-height} - 134px);
+            max-height: calc(100% - #{$navbar-height} - 134px);
+
+            margin-top: 134px;
+
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .multiplayerLobby {
