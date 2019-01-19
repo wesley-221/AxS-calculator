@@ -1,15 +1,8 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const {app, BrowserWindow} = require('electron');
 const path              = require('path');
 const glob              = require('glob');
-const url               = require('url');
+
 const Store             = require('electron-store');
-const fnc               = require('./plugins/functions.js');
-const rp                = require('request-promise');
-const fs                = require('fs');
-
-const Bitbucket         = require('bitbucket');
-const bitbucket         = new Bitbucket();
-
 const store = new Store();
 
 // ============================
