@@ -31,6 +31,9 @@ $(() => {
         
         // Get the data for the newly created lobby
         ipcRenderer.send('requestMultiplayerLobby', arg);
+
+        // Send a request to the server to retrieve all saved lobbies
+        ipcRenderer.send(`requestSavedLobbies`, true);
     });
 
     $('#createLobbyAlert').on('click', '#lobbyText a', (event) => {
