@@ -10,6 +10,11 @@ $(() => {
     ipcRenderer.on('savedData', (event, arg) => {
         $('#saveButton').html('Save');
         $('#message').html(`<div class="alert alert-success col-7"><h2><i class="fas fa-check"></i> Success!</h2>Succesfully saved your API key.</div>`);
+
+        // Remove the message from the screen
+        setTimeout(() => {
+            $('#message').html('');
+        }, 3000);
     });
 
     // Request the api key
@@ -24,6 +29,11 @@ $(() => {
     ipcRenderer.on('errorMessage', (event, errorMessage) => {
         $('#saveButton').html('Save');
         $('#message').html(`<div class="alert alert-danger col-7"><h2><i class="fas fa-exclamation-triangle"></i> Error</h2> ${errorMessage}</div>`);
+
+        // Remove the message from the screen
+        setTimeout(() => {
+            $('#message').html('');
+        }, 3000);
     });
 
     $('#exportConfigFile').on('click', function() {
@@ -44,6 +54,11 @@ $(() => {
             $('#exportConfigFileMessage').removeClass('alert-success');
             $('#exportConfigFileMessage').removeClass('no-show');
         }
+
+        // Remove the message from the screen
+        setTimeout(() => {
+            $('#exportConfigFileMessage').addClass('no-show');
+        }, 3000);
     });
 
     $('#clearCache').on('click', function() {
@@ -54,6 +69,11 @@ $(() => {
     // When the cache has been cleared
     ipcRenderer.on('clearedCache', (event, arg) => {
         $('#clearCacheMessage').removeClass('no-show');
+
+        // Remove the message from the screen
+        setTimeout(() => {
+            $('#clearCacheMessage').addClass('no-show');
+        }, 3000);
     });
 
     $('#removeApiKey').on('click', function() {
@@ -64,6 +84,11 @@ $(() => {
     // When the cache has been cleared
     ipcRenderer.on('removedApiKey', (event, arg) => {
         $('#removeApiKeyMessage').removeClass('no-show');
+
+        // Remove the message from the screen
+        setTimeout(() => {
+            $('#removeApiKeyMessage').addClass('no-show');
+        }, 3000);
     });
 
     $('#exportModifiers').on('click', function() {
@@ -85,6 +110,11 @@ $(() => {
             $('#exportModifiersMessage').removeClass('alert-success');
             $('#exportModifiersMessage').removeClass('no-show');
         }
+
+        // Remove the message from the screen
+        setTimeout(() => {
+            $('#exportModifiersMessage').addClass('no-show');
+        }, 3000);
     });
 
     // =====================================
