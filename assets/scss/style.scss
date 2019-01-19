@@ -61,6 +61,23 @@ html, body {
     } 
 }
 
+.loadingScreen {
+    width: 960px;
+    height: 540px;
+
+    background-image: url('../images/loading.png');
+
+    .circle {
+        position: fixed; 
+
+        bottom: 0;
+        width: 100%;
+
+        font-size: 50px;
+        text-align: center;
+    }
+}
+
 .titleBar {
     position: fixed;
 
