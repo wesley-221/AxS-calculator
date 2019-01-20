@@ -327,6 +327,10 @@ html, body {
                 overflow-y: auto;
                 overflow-x: hidden;
             }
+
+            &.no-right-padding {
+                padding-right: 0;
+            }
         }
 
         .teamWin {
@@ -356,10 +360,13 @@ html, body {
         }
 
         .allMaps {
-            height:     calc(100% - #{$navbar-height} - 134px);
-            max-height: calc(100% - #{$navbar-height} - 134px);
+            height:     calc(100% - #{$navbar-height} - 111px);
+            max-height: calc(100% - #{$navbar-height} - 111px);
 
             margin-top: 134px;
+
+            padding-right: 16px;
+            padding-bottom: 16px;
 
             overflow-y: auto;
             overflow-x: hidden;
@@ -547,12 +554,12 @@ h1, h2, h3, h4, h5, h6 {
 .apiError {
     position: fixed;
 
-    width: calc(100% - 14px);
+    width: calc(100% - #{$sidebar-width} - 14px);
     top: 20px;
+    right: 0;
 
-    margin-left: 7px;
-    margin-right: 7px;
-
+    margin: 7px;
+    
     cursor: pointer;
 
     z-index: 2000;
