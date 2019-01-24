@@ -45,17 +45,6 @@ Array.prototype.forEach.call(links, link => {
     document.querySelector('.mainContent').appendChild(clone);
 })
 
-
-function getUrlParamters() {
-    let vars = {};
-
-    const parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
-        vars[key] = value;
-    });
-
-    return vars;
-}
-
 function addDot(nStr, splitter = ' ') {
     nStr += '';
     const x = nStr.split('.');
@@ -126,6 +115,7 @@ else {
     $('#information-btn').click();
 }
 
+// Window manipulation
 $('#minimize-btn').on('click', () => {
     remote.getCurrentWindow().minimize();
 });
