@@ -100,10 +100,18 @@ ipcMain.on('createLobby', (event, arg) => {
                 rp(`https://osu.ppy.sh/api/get_beatmaps?k=${apiKey}&b=${currentGame.beatmap_id}&m=2&a=1`).then(beatmap => {
                     beatmap = JSON.parse(beatmap);
 
-                    store.set(`cache.beatmaps.${currentGame.beatmap_id}`, {
-                        name: `${beatmap[0].artist} - ${beatmap[0].title} [${beatmap[0].version}]`,
-                        beatmapset_id: beatmap[0].beatmapset_id
-                    });
+                    if(Object.keys(beatmap).length > 0) {
+                        store.set(`cache.beatmaps.${currentGame.beatmap_id}`, {
+                            name: `${beatmap[0].artist} - ${beatmap[0].title} [${beatmap[0].version}]`,
+                            beatmapset_id: beatmap[0].beatmapset_id
+                        });
+                    }
+                    else {
+                        store.set(`cache.beatmaps.${currentGame.beatmap_id}`, {
+                            name: `deleted map`,
+                            beatmapset_id: 0
+                        });
+                    }
                 });
             }
         }
