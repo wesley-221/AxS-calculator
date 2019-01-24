@@ -127,6 +127,18 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
                     store.set(`lobby.${lobbyId}.multiplayerData.${currentGame.game_id}.beatmap_id`, currentGame.beatmap_id);
                 }
 
+                // Create the object countForScore if it doesn't exist
+                if(!lobby.hasOwnProperty('countForScore')) {
+                    store.set(`lobby.${lobbyId}.countForScore`, {});
+                    lobby.countForScore = {};
+                }
+
+                // Count the score towards the final score shown in the overview
+                if(!lobby.countForScore.hasOwnProperty(currentGame.game_id)) {
+                    lobby.countForScore[currentGame.game_id] = true;
+                    store.set(`lobby.${lobbyId}.countForScore.${currentGame.game_id}`, true);
+                }
+
                 // Check if the beatmap has been cached, if not cache it
                 if(!cache.beatmaps.hasOwnProperty(currentGame.beatmap_id)) {
                     await rp(`https://osu.ppy.sh/api/get_beatmaps?k=${apiKey}&b=${currentGame.beatmap_id}&m=2&a=1`).then(beatmap => {
@@ -200,4 +212,10 @@ ipcMain.on('retrieveMultiplayerData', async (event, lobbyId) => {
             });
         });
     }
+});
+
+// This gets called when a user clicks on a checkbox in the settings tab for a map
+// Enables or disabled the game towards the final score of the lobby
+ipcMain.on('toggleUseScore', (event, data) => {
+    store.set(`lobby.${data.lobbyId}.countForScore.${data.gameId}`, data.value);
 });

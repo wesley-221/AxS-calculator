@@ -22,11 +22,14 @@ $(() => {
         for(let map in arg.maps) {
             const currentMap = arg.maps[map];
 
-            if(currentMap.team_one_score > currentMap.team_two_score) {
-                teamOneScore ++;
-            }
-            else {
-                teamTwoScore ++;
+            // Only count score that have been selected to count
+            if(arg.lobby.hasOwnProperty('countForScore') && arg.lobby.countForScore.hasOwnProperty(map) && arg.lobby.countForScore[map] == true) {
+                if(currentMap.team_one_score > currentMap.team_two_score) {
+                    teamOneScore ++;
+                }
+                else {
+                    teamTwoScore ++;
+                }
             }
         }
 
@@ -34,12 +37,46 @@ $(() => {
         $('.matchHeader').html('');
         $('.allMaps').html('');
 
+        // The match result string
+        const scoreString = `Current score: ${arg.lobby.data.teamOneName} score : ${teamOneScore} | ${teamTwoScore} : score ${arg.lobby.data.teamTwoName}`;
+
         $('.matchHeader').append(`<h2>${arg.lobby.data.description}</h2>
                                     Multiplayer link: <a href="${arg.lobby.data.multiplayerLink}">${arg.lobby.data.multiplayerLink}</a><br />
 
                                     <span id="scoreString"><span class=red-text>Team ${arg.lobby.data.teamOneName}</span> score : <span class=${(teamOneScore > teamTwoScore) ? 'teamWin' : 'teamLoss'}>${teamOneScore}</span> | <span class=${(teamOneScore > teamTwoScore) ? 'teamLoss' : 'teamWin'}>${teamTwoScore}</span> : score <span class=blue-text>Team ${arg.lobby.data.teamTwoName}</span></span>
-                                    <button id=getMultiplayerData type=button class="btn btn-info float-right" data-lobbyid="${arg.lobbyId}">Retrieve multiplayer data</button>
+
+                                    <div class="copyResult green-text">
+                                        Succesfully copied the result to your clipboard!
+                                    </div>
+
+                                    <div class="btn-group float-right">
+                                        <button id=copyMatchResult type=button class="btn btn-info" data-string="${scoreString}" title="Copy match score"><i class="far fa-copy"></i></button>
+                                        <button id=scorePopup type=button class="btn btn-info" title="Score count settings"><i class="fas fa-cogs"></i></button>
+                                        <button id=getMultiplayerData type=button class="btn btn-success" data-lobbyid="${arg.lobbyId}" title="Synchronize multiplayer data"><i class="fas fa-sync"></i></button>
+                                    </div>
+
                                     <hr />`);
+        
+        $('.matchHeader').append(`  <div id=scoreOverlay class=scoreOverlay>
+                                        <div class="alert alert-info">In this overview you can select which maps should count towards the maps won, which is shown on top of the page.</div>
+                                        <table class="table table-dark table-striped">
+                                            <thead>
+                                                <th></th>
+
+                                                <th>
+                                                    Title
+                                                </th>
+
+                                                <th>
+                                                    Option
+                                                </th>
+                                            </thead>
+
+                                            <tbody id=scoreOverlayTable>
+
+                                            </tbody>
+                                        </table>
+                                    </div>`);
 
         for(let map in arg.maps) {
             const currentMap = arg.maps[map];
@@ -139,11 +176,28 @@ $(() => {
                                         <button id="copy_${randomToken}" data-${randomToken}="${copyMessage}" type=button class="btn btn-primary">Copy result</button>
                                     </div>
                                 </div>`);
+
+            // Check whether or not the map should count towards the score
+            const currentBeatmapCountsForScore = ((arg.lobby.hasOwnProperty('countForScore') && arg.lobby.countForScore.hasOwnProperty(map) && arg.lobby.countForScore[map] == true) ? 'checked' : '');
+
+            $('#scoreOverlayTable').append(`    <tr>
+                                                    <td>
+                                                        <img src="https://b.ppy.sh/thumb/${arg.cache.beatmaps[currentMap.beatmap_id].beatmapset_id}.jpg" />
+                                                    </td>
+
+                                                    <td>
+                                                        ${arg.cache.beatmaps[currentMap.beatmap_id].name}
+                                                    </td>
+
+                                                    <td>
+                                                        <input id=toggleUseScore type=checkbox class="form-control" data-lobbyid="${arg.lobbyId}" data-gameid="${map}" ${currentBeatmapCountsForScore} />
+                                                    </td>
+                                                </tr>`);
         }
     });
 
     $('.matchHeader').on('click', '#getMultiplayerData', function() {
-        $('#getMultiplayerData').html('Retrieve multiplayer data <i class="fas fa-spinner fa-spin"></i>');
+        $('#getMultiplayerData').html('<i class="fas fa-sync fa-spin"></i>');
 
         $('.matchHeader').append('<div id="scoresUpdatedAlert"></div>');
 
@@ -181,8 +235,38 @@ $('body').on('click', '[id^=copy_]', function() {
     $(`#copyresult_${thisId}`).addClass('in');
     $(`#copyresult_${thisId}`).html('Succesfully copied the result to your clipboard!');
 
-    setTimeout(function() {
+    setTimeout(() => {
         $(`#copyresult_${thisId}`).removeClass('in');
+    }, 3000);
+}).on('click', '[id=scorePopup]', () => {
+    $('.scoreOverlay').toggleClass('in');
+}).on('click', '.scoreOverlay', e => {
+    if(e.target.id == "scoreOverlay") {
+        $('.scoreOverlay').toggleClass('in');
+    }
+}).on('click', '#toggleUseScore', function() {
+    // Send the lobby id, game id and whether or not to count the score towards the overview score to the main
+    ipcRenderer.send('toggleUseScore', {
+        lobbyId:    $(this).data('lobbyid'),
+        gameId:     $(this).data('gameid'), 
+        value:      $(this).is(':checked')
+    });
+}).on('click', '#copyMatchResult', function() {
+    const copyMessage = $(this).data('string');
+
+    let textArea = document.createElement("textarea");
+    textArea.value = copyMessage;
+    document.body.appendChild(textArea);
+
+    textArea.select();
+    document.execCommand('copy');
+    
+    document.body.removeChild(textArea);
+
+    $('.copyResult').addClass('in');
+
+    setTimeout(() => {
+        $('.copyResult').removeClass('in');
     }, 3000);
 });
 
