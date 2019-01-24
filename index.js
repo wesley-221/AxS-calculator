@@ -66,9 +66,10 @@ initialize = async () => {
         const windowOptions = {
             title: app.getName(),
             icon: __dirname + '/assets/images/axs.ico',
-            frame: false,
             titleBarStyle: 'hidden',
+            frame: false,
             show: false,
+            alwaysOnTop: true,
             width: 960,
             height: 540
         };
