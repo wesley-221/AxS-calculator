@@ -36,7 +36,6 @@ $(() => {
         for(const lobbyId in arg) {
             const currentLobby = arg[lobbyId].data;
 
-            // data-section="lobby-view" >>> Add this to EVERY element in the div except for the delete button
             $('.allLobbies').append(`<div id="${lobbyId}" class=multiplayerLobby data-section="lobby-view" data-lobbyid="${lobbyId}">
                                         <div class="body" data-section="lobby-view">
                                             <div class="row" data-section="lobby-view">
