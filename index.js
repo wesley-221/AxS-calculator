@@ -1,9 +1,12 @@
-const {app, BrowserWindow} = require('electron');
-const path              = require('path');
-const glob              = require('glob');
+const {app, BrowserWindow, ipcMain} = require('electron');
+const path                          = require('path');
+const glob                          = require('glob');
 
-const Store             = require('electron-store');
+const Store = require('electron-store');
 const store = new Store();
+
+const Octakit = require('@octokit/rest');
+const octakit = new Octakit();
 
 // ============================
 // Create some global variables
@@ -95,6 +98,29 @@ initialize = async () => {
 
         loadingWindow.once('ready-to-show', () => {
             createWindow();
+
+            // =====================================================================
+            // Check if the version is the latest version, if not send out a warning
+            octakit.repos.getContents({
+                'owner': 'wesleyalkemade',
+                'repo': 'AxS-calculator',
+                'path': 'package.json'
+            }).then(result => {
+                let buffer = Buffer.from(result.data.content, 'base64');
+                const   currentVersion = app.getVersion(),
+                        remoteVersion = JSON.parse(buffer.toString('ascii')).version;
+
+                // =========================================================
+                // The current version is old compared to the remote version
+                if(currentVersion < remoteVersion) {
+                    mainWindow.webContents.send('oldVersion', {
+                        'currentVersion': currentVersion,
+                        'latestVersion': remoteVersion
+                    });
+
+                    console.log('old version');
+                }
+            });
         })
     });
 

@@ -1,19 +1,6 @@
 const {ipcRenderer} = require('electron');
 const settings = require('electron-settings');
 
-// =====================================
-// Send out to check the current version
-ipcRenderer.send('checkVersion', true);
-
-// ==============================================
-// Check if the application is the latest version
-ipcRenderer.on('oldVersion', (event, arg) => {
-    $('#cur-version').html(arg.currentVersion);
-    $('#latest-version').html(arg.latestVersion);
-
-    $('.sb-old-version').addClass('in');
-});
-
 $(() => {
     // Request if the api key is valid
     ipcRenderer.send('requestApiValidation', true);
@@ -75,18 +62,5 @@ $(() => {
             // Request the lobby 
             ipcRenderer.send('requestMultiplayerLobby', $(this).data('lobbyid'));
         }
-    });
-
-    // =====================================
-    // Send out to check the current version
-    ipcRenderer.send('checkVersion', true);
-
-    // ==============================================
-    // Check if the application is the latest version
-    ipcRenderer.on('oldVersion', (event, arg) => {
-        $('#cur-version').html(arg.currentVersion);
-        $('#latest-version').html(arg.latestVersion);
-
-        $('.sb-old-version').addClass('in');
     });
 });

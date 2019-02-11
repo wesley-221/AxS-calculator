@@ -1,7 +1,7 @@
 {
   "name": "axs-scorecalculator",
   "productName": "AxSCalculator",
-  "version": "2.0.5",
+  "version": "2.1.5",
   "description": "A calculator to calculate the score with the AxS score format",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "electron-packager": "^12.2.0"
   },
   "dependencies": {
-    "bitbucket": "^1.5.0",
+    "@octokit/rest": "^16.15.0",
     "electron-settings": "^3.2.0",
     "electron-store": "^2.0.0",
     "glob": "^7.1.3",

@@ -1,31 +1,24 @@
 const {app, ipcMain} = require('electron');
 
-const Bitbucket = require('bitbucket');
-const bitbucket = new Bitbucket();
+const Octakit = require('@octokit/rest');
+const octakit = new Octakit();
 
 // ======================================
 // This is called when accessing any page
 ipcMain.on('checkVersion', (event, arg) => {
     // =====================================================================
     // Check if the version is the latest version, if not send out a warning
-    bitbucket.repositories.getSrc({
-        'username': 'wesley221',
-        'repo_slug': 'axs-calculator',
-        'node': 'master',
+    octakit.repos.getContents({
+        'owner': 'wesleyalkemade',
+        'repo': 'AxS-calculator',
         'path': 'package.json'
-    }).then(({data, headers}) => {
-        data = JSON.parse(data);
+    }).then(result => {
+        // console.log(result.data.content);
+        // let buffer = Buffer.alloc(null, result.data.content, 'base64');
+        // console.log(buffer.toString('ascii'));
 
-        const   currentVersion = app.getVersion()
-                remoteVersion = data.version;        
-        
-        // ==================
-        // The version is old
-        if(currentVersion < remoteVersion) {
-            event.sender.send('oldVersion', {
-                'currentVersion': currentVersion,
-                'latestVersion': remoteVersion
-            });
-        }
+        console.log('test');
+    }).catch(error => {
+        console.log(error);
     });
 });
