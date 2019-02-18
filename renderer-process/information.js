@@ -24,7 +24,7 @@ $(() => {
     // Check if the filled in API key is valid
     ipcRenderer.on('onRequestedApiValidation', (event, arg) => {
         if(arg == false) {
-            $('body').append(`<div class="alert alert-danger apiError"><h2><i class="fas fa-exclamation-triangle"></i> Error</h2>You have not set your API key yet. Make sure to set your API key <a href="./settings.html">here</a>.</div>`);
+            $('body').append(`<div class="alert alert-danger apiError"><h2><i class="fas fa-exclamation-triangle"></i> Error</h2>You have not set your API key yet. Make sure to set your API key <a href="#" data-section="settings">here</a>.</div>`);
         }
     });
 });

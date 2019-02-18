@@ -117,3 +117,9 @@ $(() => {
         }, 3000);
     });
 });
+
+// Open urls in the actual browser and not within the application
+$('body').on('click', '#apiKeyLocation', (e) => {
+    e.preventDefault();
+    require("electron").shell.openExternal(e.target.href);
+});
