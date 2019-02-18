@@ -118,6 +118,17 @@ initialize = async () => {
                         'latestVersion': remoteVersion
                     });
                 }
+                else {
+                    mainWindow.webContents.send('newVersion', {
+                        'currentVersion': currentVersion,
+                        'latestVersion': remoteVersion
+                    });
+                }
+
+                // =============================
+                // Check if the api key is valid
+                const apiKeyValid = store.get('api-key.valid');
+                mainWindow.webContents.send(`onRequestedApiValidation`, apiKeyValid);
             });
         })
     });

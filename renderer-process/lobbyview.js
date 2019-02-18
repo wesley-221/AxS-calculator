@@ -2,16 +2,6 @@ const {ipcRenderer} = require('electron');
 const settings = require('electron-settings');
 
 $(() => {
-    // Request if the api key is valid
-    ipcRenderer.send('requestApiValidation', true);
-
-    // The returned state of the api key
-    ipcRenderer.on('onRequestedApiValidation', (event, arg) => {
-        if(arg == false) {
-            $('body').append(`<div class="alert alert-danger apiError"><h2><i class="fas fa-exclamation-triangle"></i> Error</h2>You have not set your API key yet. Make sure to set your API key <a href="./settings.html">here</a>.</div>`);
-        }
-    });
-
     // =================================================
     // This will be called after requestMultiplayerLobby
     ipcRenderer.on('requestedLobby', (event, arg) => {
