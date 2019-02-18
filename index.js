@@ -117,8 +117,6 @@ initialize = async () => {
                         'currentVersion': currentVersion,
                         'latestVersion': remoteVersion
                     });
-
-                    console.log('old version');
                 }
             });
         })
